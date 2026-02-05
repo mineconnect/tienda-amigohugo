@@ -74,9 +74,12 @@ const Footer: React.FC = () => {
                 {/* Bottom Bar */}
                 <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600 font-medium">
                     <p>&copy; {new Date().getFullYear()} VHF_Decants. Todos los derechos reservados.</p>
-                    <div className="flex gap-6">
-                        <span className="hover:text-gray-400 cursor-pointer">Privacidad</span>
-                        <span className="hover:text-gray-400 cursor-pointer">Términos</span>
+                    <div className="flex gap-6 items-center">
+                        <span className="hover:text-gray-400 cursor-pointer transition-colors">Privacidad</span>
+                        <span className="hover:text-gray-400 cursor-pointer transition-colors">Términos</span>
+                        <a href="/login" className="text-gray-800 hover:text-gray-600 transition-colors text-[10px] uppercase tracking-widest border border-gray-800 px-2 py-1 rounded hover:border-gray-600">
+                            Admin Access
+                        </a>
                     </div>
                 </div>
             </div>

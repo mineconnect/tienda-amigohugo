@@ -8,10 +8,12 @@ interface ProductGridProps {
 }
 
 const ProductGrid: React.FC<ProductGridProps> = ({ products, loading }) => {
-    const WHATSAPP_NUMBER = "5491123456789";
+    const WHATSAPP_NUMBER = "5493834789035";
 
-    const getWhatsAppLink = (productName: string) => {
-        const message = `Hola VHF Decants, me interesa: ${productName}`;
+    const getWhatsAppLink = (productName: string, price: number, description: string) => {
+        const formattedPrice = formatCurrency(price);
+        // "Hola, estoy interesado en: [Nombre del producto] - Precio: [Precio] - [Descripción breve]. ¿Me das más info?"
+        const message = `Hola, estoy interesado en: ${productName} - Precio: ${formattedPrice} - ${description ? description.substring(0, 50) + '...' : ''}. ¿Me das más info?`;
         return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     };
 
@@ -92,12 +94,12 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, loading }) => {
                                 {/* Quick Action Overlay */}
                                 <div className="absolute inset-x-4 bottom-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 z-10">
                                     <a
-                                        href={getWhatsAppLink(product.nombre)}
+                                        href={getWhatsAppLink(product.nombre, product.precio, product.descripcion)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="block w-full bg-white/95 backdrop-blur text-primary text-center py-3 rounded-full font-bold text-sm shadow-lg hover:bg-primary hover:text-white transition-colors"
                                     >
-                                        Consultar Precio
+                                        Consultar / Comprar
                                     </a>
                                 </div>
                             </div>
@@ -116,7 +118,9 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, loading }) => {
                                         {formatCurrency(product.precio)}
                                     </span>
                                     <a
-                                        href={getWhatsAppLink(product.nombre)}
+                                        href={getWhatsAppLink(product.nombre, product.precio, product.descripcion)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
                                         className="w-10 h-10 rounded-full bg-black text-white flex items-center justify-center group-hover:bg-accent transition-colors duration-300"
                                     >
                                         <ArrowRight size={18} className="-rotate-45 group-hover:rotate-0 transition-transform duration-500" />

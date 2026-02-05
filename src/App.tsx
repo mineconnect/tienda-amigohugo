@@ -1,39 +1,45 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Admin from './pages/Admin';
+import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App: React.FC = () => {
-  // Sistema simple de navegación
-  const [ruta, setRuta] = useState('home');
-
   return (
-    <div>
-      {/* Si la ruta es 'admin' mostramos el panel, si no, la Tienda */}
-      {ruta === 'admin' ? (
-        <Admin />
-      ) : (
-        <Home />
-      )}
-      
-      {/* Botón secreto para ir al Admin (flotante abajo a la derecha) */}
-      {ruta === 'home' && (
-        <button 
-          onClick={() => setRuta('admin')}
-          className="fixed bottom-4 right-4 z-50 bg-gray-900 text-gray-500 p-2 rounded-full opacity-20 hover:opacity-100 transition-opacity text-xs"
-        >
-          Admin
-        </button>
-      )}
-      
-       {ruta === 'admin' && (
-        <button 
-          onClick={() => setRuta('home')}
-          className="fixed bottom-4 right-4 z-50 bg-indigo-600 text-white px-4 py-2 rounded-full shadow-lg"
-        >
-          Volver a la Tienda
-        </button>
-      )}
-    </div>
+    <>
+      {/* Global Luxury Watermark */}
+      <div className="fixed inset-0 z-[-1] flex items-center justify-center pointer-events-none select-none overflow-hidden bg-white/50">
+        <img
+          src="/logo.jpeg"
+          alt=""
+          className="w-[80vh] h-[80vh] object-contain opacity-[0.03] grayscale contrast-125 mix-blend-multiply"
+        />
+      </div>
+
+      <Router>
+        <Routes>
+          {/* Ruta Pública: Tienda */}
+          <Route path="/" element={<Home />} />
+
+          {/* Ruta Pública: Login */}
+          <Route path="/login" element={<Login />} />
+
+          {/* Ruta Protegida: Admin */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
+    </>
   );
 };
 
