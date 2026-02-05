@@ -110,23 +110,28 @@ const Login: React.FC = () => {
           <div className="mt-6 text-center">
             <button
               onClick={async () => {
-                if (!confirm('¿Crear usuario admin@vhfdecants.com?')) return;
+                if (!email || !password) {
+                  alert('Por favor completa el Email y Contraseña arriba para registrarte.');
+                  return;
+                }
+                if (!confirm(`¿Registrar nuevo administrador: ${email}?`)) return;
+
                 setLoading(true);
                 const { error } = await supabase.auth.signUp({
-                  email: 'admin@vhfdecants.com',
-                  password: 'Hugo123VHF',
+                  email,
+                  password,
                 });
                 setLoading(false);
-                if (error) alert('Error: ' + error.message);
-                else {
-                  alert('¡Usuario creado! Revisa tu email para confirmar (si está activo) o intenta loguearte.');
-                  setEmail('admin@vhfdecants.com');
-                  setPassword('Hugo123VHF');
+
+                if (error) {
+                  alert('Error de registro: ' + error.message);
+                } else {
+                  alert('¡Usuario registrado! Si Supabase pide confirmación, revisa tu email. Si no, intenta iniciar sesión ahora.');
                 }
               }}
               className="text-xs text-gray-500 hover:text-accent transition-colors underline"
             >
-              ¿Primer acceso? Crear Usuario Admin
+              ¿No tienes cuenta? Registrarse como Admin
             </button>
           </div>
         </div>
