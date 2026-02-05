@@ -1,2 +1,44 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 @import "tailwindcss";
+
+@theme {
+    --color-primary: #0a0a0a;
+    --color-secondary: #64748b;
+    --color-accent: #d946ef;
+    --color-base-100: #ffffff;
+    --color-base-200: #f8f9fa;
+
+    --font-sans: "Inter", sans-serif;
+    --font-serif: "Playfair Display", serif;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+        background-color: var(--color-base-200);
+        color: var(--color-primary);
+    }
+
+    ::selection {
+        background-color: var(--color-accent);
+        color: white;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply px-6 py-3 rounded-full font-medium transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-xl text-white;
+        background-color: var(--color-primary);
+    }
+
+    .glass-panel {
+        @apply backdrop-blur-md border;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+}
