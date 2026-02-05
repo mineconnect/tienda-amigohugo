@@ -106,6 +106,29 @@ const Login: React.FC = () => {
               {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : 'INGRESAR AL PANEL'}
             </button>
           </form>
+
+          <div className="mt-6 text-center">
+            <button
+              onClick={async () => {
+                if (!confirm('¿Crear usuario admin@vhfdecants.com?')) return;
+                setLoading(true);
+                const { error } = await supabase.auth.signUp({
+                  email: 'admin@vhfdecants.com',
+                  password: 'Hugo123VHF',
+                });
+                setLoading(false);
+                if (error) alert('Error: ' + error.message);
+                else {
+                  alert('¡Usuario creado! Revisa tu email para confirmar (si está activo) o intenta loguearte.');
+                  setEmail('admin@vhfdecants.com');
+                  setPassword('Hugo123VHF');
+                }
+              }}
+              className="text-xs text-gray-500 hover:text-accent transition-colors underline"
+            >
+              ¿Primer acceso? Crear Usuario Admin
+            </button>
+          </div>
         </div>
       </div>
     </div>
