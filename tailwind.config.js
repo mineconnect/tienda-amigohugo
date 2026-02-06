@@ -8,15 +8,16 @@ export default {
     extend: {
       colors: {
         primary: '#0a0a0a', // Deep Luxury Black
-        secondary: '#64748b', // Sophisticated Slate
+        secondary: '#171717', // Secondary Dark (Cards)
         accent: {
-          DEFAULT: '#d946ef', // Brand Magenta
-          dark: '#c026d3', // Hover state
-          light: '#f0abfc', // Light accents
+          DEFAULT: '#7c3aed', // Royal Purple
+          dark: '#5b21b6', // Deep Purple (Hover)
+          light: '#8b5cf6', // Light Purple
+          glow: '#4c1d95', // Subtle Glow
         },
-        'base-100': '#FFFFFF',
-        'base-200': '#F8F9FA',
-        'surface': '#18181b', // Dark cards
+        'base-100': '#0a0a0a', // Base Background
+        'base-200': '#171717', // Surface Background
+        'surface': '#171717', // Dark cards
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
