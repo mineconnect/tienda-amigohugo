@@ -9,11 +9,11 @@ const App: React.FC = () => {
   return (
     <>
       {/* Global Luxury Watermark */}
-      <div className="fixed inset-0 z-[-1] flex items-center justify-center pointer-events-none select-none overflow-hidden bg-white/50">
+      <div className="fixed inset-0 z-[-1] flex items-center justify-center pointer-events-none select-none overflow-hidden bg-primary">
         <img
           src="/logo.jpeg"
           alt=""
-          className="w-[80vh] h-[80vh] object-contain opacity-[0.03] grayscale contrast-125 mix-blend-multiply"
+          className="w-[120vh] h-[120vh] object-contain opacity-[0.05] grayscale mix-blend-screen"
         />
       </div>
 
