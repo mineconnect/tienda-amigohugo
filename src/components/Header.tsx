@@ -21,8 +21,8 @@ const Header: React.FC<HeaderProps> = ({ cartCount = 0 }) => {
         <>
             <nav
                 className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${isScrolled
-                        ? 'bg-black/80 backdrop-blur-md border-b border-white/10 py-3 shadow-xl'
-                        : 'bg-transparent py-6'
+                    ? 'bg-primary/90 backdrop-blur-md border-b border-white/5 py-3 shadow-2xl'
+                    : 'bg-transparent py-6'
                     }`}
             >
                 <div className="container mx-auto px-6">
