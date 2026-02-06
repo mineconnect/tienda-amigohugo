@@ -75,13 +75,13 @@ const Admin: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-accent selection:text-white pb-20">
+    <div className="min-h-screen bg-primary text-white selection:bg-accent selection:text-white pb-20">
 
       {/* Navbar Admin */}
-      <nav className="border-b border-white/10 bg-black/50 backdrop-blur-md sticky top-0 z-40">
+      <nav className="border-b border-white/5 bg-primary/80 backdrop-blur-md sticky top-0 z-40">
         <div className="container mx-auto px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="bg-white text-black p-1.5 rounded font-serif font-bold text-xl">VHF</div>
+            <div className="bg-accent text-white p-1.5 rounded font-serif font-bold text-xl shadow-[0_0_15px_rgba(124,58,237,0.5)]">VHF</div>
             <span className="font-mono text-xs text-gray-400 uppercase tracking-widest">Admin Panel</span>
           </div>
 
@@ -104,8 +104,8 @@ const Admin: React.FC = () => {
 
           {/* Columna Izquierda: Formulario */}
           <div className="lg:col-span-1">
-            <div className="sticky top-28 bg-[#111] border border-white/10 rounded-2xl p-6 shadow-2xl">
-              <h2 className="font-serif text-2xl font-bold mb-6 flex items-center gap-3">
+            <div className="sticky top-28 bg-surface border border-white/5 rounded-2xl p-6 shadow-2xl backdrop-blur-sm">
+              <h2 className="font-serif text-2xl font-bold mb-6 flex items-center gap-3 text-white">
                 <Plus className="text-accent" /> Nuevo Producto
               </h2>
 
@@ -154,7 +154,7 @@ const Admin: React.FC = () => {
                 </div>
 
                 <div className="pt-4">
-                  <label className={`cursor-pointer w-full flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-all ${nuevo.imagen_url ? 'border-accent bg-accent/5' : 'border-white/10 hover:border-white/20 hover:bg-white/5'}`}>
+                  <label className={`cursor-pointer w-full flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-all ${nuevo.imagen_url ? 'border-accent bg-accent/5' : 'border-white/10 hover:border-accent/40 hover:bg-accent/5'}`}>
                     {nuevo.imagen_url ? (
                       <div className="relative group w-full h-32">
                         <img src={nuevo.imagen_url} className="w-full h-full object-contain rounded-md" alt="Preview" />
@@ -175,7 +175,7 @@ const Admin: React.FC = () => {
                 <button
                   onClick={guardarProducto}
                   disabled={loadingConfig || uploading || !nuevo.nombre}
-                  className="w-full bg-white text-black py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-accent hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-4"
+                  className="w-full bg-accent text-white py-4 rounded-xl font-bold uppercase tracking-widest hover:bg-accent-dark transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(124,58,237,0.3)] mt-4"
                 >
                   {loadingConfig ? 'Guardando...' : 'Publicar Producto'}
                 </button>

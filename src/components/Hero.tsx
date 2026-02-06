@@ -43,7 +43,7 @@ const Hero: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
                     <button
                         onClick={scrollToProducts}
-                        className="group relative px-8 py-4 bg-white text-black rounded-full font-medium transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] overflow-hidden"
+                        className="group relative px-8 py-4 bg-accent text-white rounded-full font-medium transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_30px_rgba(124,58,237,0.4)] overflow-hidden"
                     >
                         <span className="relative z-10 flex items-center gap-2">
                             Ver Catálogo <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />

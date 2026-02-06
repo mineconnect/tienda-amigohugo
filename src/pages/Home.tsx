@@ -32,7 +32,7 @@ const Home: React.FC = () => {
   };
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-primary min-h-screen text-white">
       <Header cartCount={0} />
 
       <main>
