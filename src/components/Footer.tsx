@@ -16,7 +16,7 @@ const Footer: React.FC = () => {
                             <img src="/logo.jpeg" alt="VHF Logo" className="h-16 w-auto rounded-lg opacity-90 border border-white/10" />
                             <div>
                                 <h2 className="font-serif text-2xl font-bold tracking-wide">VHF_Decants</h2>
-                                <p className="text-accent text-xs uppercase tracking-[0.3em]">Luxury Fragrances</p>
+                                <p className="text-accent text-xs uppercase tracking-[0.3em]">Exclusividad & Estilo</p>
                             </div>
                         </div>
                         <p className="text-gray-400 font-light leading-relaxed max-w-sm">
@@ -61,11 +61,11 @@ const Footer: React.FC = () => {
                         <ul className="space-y-4 text-gray-400 font-light text-sm">
                             <li className="flex items-start gap-3">
                                 <MapPin size={16} className="mt-1 text-accent" />
-                                <span>Buenos Aires, Argentina<br />Envíos a todo el país</span>
+                                <span>Catamarca - Argentina<br />Envíos a todo el país</span>
                             </li>
                             <li className="flex items-center gap-3">
                                 <MessageCircle size={16} className="text-accent" />
-                                <span>+54 9 11 2345-6789</span>
+                                <span>+54 9 383 478 9035 <span className="text-xs text-white/30 ml-1">By Hugo Figueroa</span></span>
                             </li>
                         </ul>
                     </div>
