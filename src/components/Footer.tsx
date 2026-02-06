@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
                             </div>
                         </div>
                         <p className="text-gray-400 font-light leading-relaxed max-w-sm">
-                            Descubre la esencia del lujo a través de nuestra selección curada de decants exclusivos. Cada gota cuenta una historia.
+                            Descubre exclusividad y estilo en productos premium seleccionados. Cada artículo tiene una historia que contar.
                         </p>
                         <div className="flex gap-4">
                             {[
