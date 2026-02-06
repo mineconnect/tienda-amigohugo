@@ -59,7 +59,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, loading }) => {
                 <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
                     <div>
                         <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-4">Nuestra Selección</h2>
-                        <p className="text-gray-500 font-light text-lg">Fragancias curadas para gustos exigentes.</p>
+                        <p className="text-gray-500 font-light text-lg">Artículos curados para gustos exigentes.</p>
                     </div>
                     <div className="text-sm font-medium text-gray-400 bg-surface px-5 py-2.5 rounded-full border border-white/5 uppercase tracking-wider">
                         {products.length} Artículos Exclusivos

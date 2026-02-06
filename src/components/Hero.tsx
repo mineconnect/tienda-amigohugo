@@ -36,7 +36,7 @@ const Hero: React.FC = () => {
                 </h1>
 
                 <p className="max-w-xl mx-auto text-gray-400 text-lg md:text-xl font-light leading-relaxed mb-10">
-                    Descubre nuestra selección exclusiva de decants de alta perfumería. Lujo accesible, calidad garantizada.
+                    Descubre nuestra selección exclusiva de artículos premium. Lujo accesible y distinción para quienes buscan lo extraordinario.
                 </p>
 
                 {/* CTAs */}
