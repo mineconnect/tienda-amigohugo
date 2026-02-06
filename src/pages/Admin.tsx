@@ -36,12 +36,15 @@ const Admin: React.FC = () => {
     const { error: uploadError } = await supabase.storage.from('productos').upload(filePath, file);
 
     if (uploadError) {
-      alert('Error subiendo imagen: ' + uploadError.message);
+      console.error('Error upload:', uploadError);
+      alert('Error al subir imagen. \n\nPosible causa: Políticas de seguridad (RLS) no configuradas en Supabase Storage. \n\nDetalle: ' + uploadError.message);
     } else {
       const { data } = supabase.storage.from('productos').getPublicUrl(filePath);
       setNuevo({ ...nuevo, imagen_url: data.publicUrl });
     }
     setUploading(false);
+    // Limpiar input para permitir subir el mismo archivo si falla
+    e.target.value = '';
   };
 
   const guardarProducto = async () => {
