@@ -21,39 +21,39 @@ export default function Navbar() {
     <nav className="fixed top-0 w-full z-50 bg-background/60 backdrop-blur-xl border-b border-outline-variant/10">
       <div className="flex justify-between items-center px-6 md:px-8 h-20 max-w-7xl mx-auto">
         {/* Logo */}
-        <Link href="/" className="font-headline text-2xl font-bold tracking-tighter text-primary">
-          VHF Decants
+        <Link href="/" className="font-headline text-lg font-bold tracking-widest text-white">
+          VHF_Decants
         </Link>
 
         {/* Desktop nav */}
         <div className="hidden md:flex space-x-8 items-center">
-          {["Colecciones", "Fragancias", "Notas de Casa", "Sets Descubrimiento"].map((item) => (
-            <a
-              key={item}
-              href="#catalogo"
-              className="font-headline uppercase tracking-widest text-xs text-on-surface-variant hover:text-primary transition-colors duration-300"
-            >
-              {item}
-            </a>
-          ))}
+            {["Colecciones", "Fragancias", "Home Decor", "Gadgets"].map((item) => (
+              <a
+                key={item}
+                href="#catalogo"
+                className="font-body text-[10px] uppercase tracking-widest text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                {item}
+              </a>
+            ))}
         </div>
 
         {/* Actions */}
-        <div className="flex items-center space-x-5">
-          <a href="#catalogo" className="hover:scale-110 transition-transform text-primary hidden md:block">
-            <span className="material-symbols-outlined">search</span>
+        <div className="flex items-center space-x-5 text-gray-300">
+          <a href="#catalogo" className="hover:scale-110 hover:text-white transition-all hidden md:block">
+            <span className="material-symbols-outlined text-[20px]">search</span>
           </a>
-          <Link href="/cart" className="hover:scale-110 transition-transform text-primary relative">
-            <span className="material-symbols-outlined">shopping_bag</span>
+          <Link href="/cart" className="hover:scale-110 hover:text-white transition-all relative">
+            <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-primary text-on-primary-fixed text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-bold h-3.5 w-3.5 rounded-full flex items-center justify-center">
                 {cartCount}
               </span>
             )}
           </Link>
           {/* Hamburger */}
           <button
-            className="md:hidden text-primary"
+            className="md:hidden hover:text-white"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <span className="material-symbols-outlined">{menuOpen ? "close" : "menu"}</span>

@@ -20,7 +20,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="bg-background text-on-background antialiased">
+      <body className="bg-background text-on-background antialiased relative">
+        <div className="fixed inset-0 z-[-1] flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <span className="font-headline font-bold text-white opacity-[0.02] text-[15vw] whitespace-nowrap tracking-tighter">
+            VHF DECANTS
+          </span>
+        </div>
         {children}
       </body>
     </html>

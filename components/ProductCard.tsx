@@ -27,63 +27,51 @@ export default function ProductCard({ product }: Props) {
   return (
     <div className="group cursor-pointer">
       {/* Image */}
-      <div className="aspect-[3/4] rounded-xl bg-surface-container overflow-hidden mb-4 relative">
+      <div className="aspect-[4/5] rounded-xl bg-[#e6e6e6] overflow-hidden mb-4 relative flex items-center justify-center p-4">
         {product.image_url ? (
           <Image
             src={product.image_url}
             alt={product.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
+            className="object-contain group-hover:scale-105 transition-transform duration-700 mix-blend-multiply p-4"
             sizes="(max-width: 768px) 100vw, 25vw"
             unoptimized
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-surface-variant">
-            <span className="material-symbols-outlined text-5xl text-on-surface-variant opacity-30">
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="material-symbols-outlined text-5xl text-black/20">
               spa
             </span>
           </div>
         )}
 
-        {/* Hover overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+        {/* Hover overlay with button */}
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-sm">
           <button
             onClick={handleAdd}
-            className="w-full bg-primary text-on-primary-fixed py-2.5 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-primary-dim transition-colors"
+            className="bg-white text-black py-2 px-6 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors"
           >
-            {added ? "✓ Agregado" : "Agregar al carrito"}
+            {added ? "✓ Agregado" : "Agregar"}
           </button>
         </div>
 
         {/* Out of stock badge */}
         {!product.in_stock && (
-          <div className="absolute top-3 left-3 bg-error/90 text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full">
-            Sin stock
+          <div className="absolute top-3 left-3 bg-red-500 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-sm">
+            Sold Out
           </div>
         )}
       </div>
 
       {/* Info */}
       <div className="space-y-1">
-        <h3 className="font-headline font-bold text-sm text-on-surface leading-tight">
+        <h3 className="font-body font-bold text-sm text-gray-200 leading-tight">
           {product.name}
         </h3>
         {product.size && (
-          <p className="text-xs text-on-surface-variant uppercase tracking-wider">{product.size}</p>
+          <p className="text-xs text-gray-400 uppercase tracking-wider">{product.size}</p>
         )}
-        {product.notes && product.notes.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-2">
-            {product.notes.slice(0, 3).map((note) => (
-              <span
-                key={note}
-                className="bg-surface-container-highest px-2 py-0.5 rounded-full text-[9px] font-bold text-primary uppercase tracking-tighter"
-              >
-                {note}
-              </span>
-            ))}
-          </div>
-        )}
-        <p className="font-headline text-base font-bold text-primary mt-2">
+        <p className="font-body text-sm font-bold text-gray-100 mt-2">
           ${product.price.toLocaleString("es-AR")}
         </p>
       </div>
