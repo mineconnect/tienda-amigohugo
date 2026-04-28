@@ -25,9 +25,9 @@ export default function ProductCard({ product }: Props) {
   };
 
   return (
-    <div className="group cursor-pointer">
+    <div className="group cursor-pointer glass-card luminous-shadow rounded-xl overflow-hidden">
       {/* Image */}
-      <div className="aspect-[4/5] rounded-xl bg-[#e6e6e6] overflow-hidden mb-4 relative flex items-center justify-center p-4">
+      <div className="aspect-[4/5] rounded-xl bg-transparent overflow-hidden mb-4 relative flex items-center justify-center p-4">
         {product.image_url ? (
           <Image
             src={product.image_url}
