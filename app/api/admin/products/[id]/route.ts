@@ -6,11 +6,11 @@ export const dynamic = "force-dynamic";
 // PUT update product
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const body = await req.json();
-  const { name, description, price, image_url, category, notes, size, in_stock } = body;
+  const { name, description, price, image_url, category, notes, size, in_stock, featured } = body;
 
   const { data, error } = await supabaseAdmin
     .from("products")
-    .update({ name, description, price, image_url, category, notes, size, in_stock })
+    .update({ name, description, price, image_url, category, notes, size, in_stock, featured })
     .eq("id", params.id)
     .select()
     .single();

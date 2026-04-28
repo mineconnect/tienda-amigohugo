@@ -16,13 +16,16 @@ async function getProducts(categoria?: string): Promise<Product[]> {
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
-    let query = supabase.from("products").select("*").eq("in_stock", true).order("created_at", { ascending: false });
+    let query = supabase.from("products").select("*").eq("in_stock", true);
     
     if (categoria) {
       query = query.ilike("category", `%${categoria}%`);
+    } else {
+      // If no category, we show featured products first, then latest
+      query = query.eq("featured", true);
     }
 
-    const { data, error } = await query;
+    const { data, error } = await query.order("created_at", { ascending: false });
       
     let mockProducts: Product[] = [
       {
@@ -33,6 +36,7 @@ async function getProducts(categoria?: string): Promise<Product[]> {
         image_url: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=800&q=80",
         category: "Fragancias",
         in_stock: true,
+        featured: true,
         size: "5ml",
         created_at: new Date().toISOString(),
         notes: null
@@ -45,6 +49,7 @@ async function getProducts(categoria?: string): Promise<Product[]> {
         image_url: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80",
         category: "Fragancias",
         in_stock: true,
+        featured: true,
         size: "10ml",
         created_at: new Date().toISOString(),
         notes: null
@@ -57,6 +62,7 @@ async function getProducts(categoria?: string): Promise<Product[]> {
         image_url: "https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=800&q=80",
         category: "Fragancias",
         in_stock: true,
+        featured: true,
         size: "5ml",
         created_at: new Date().toISOString(),
         notes: null
@@ -69,6 +75,7 @@ async function getProducts(categoria?: string): Promise<Product[]> {
         image_url: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80",
         category: "Fragancias",
         in_stock: true,
+        featured: true,
         size: "10ml",
         created_at: new Date().toISOString(),
         notes: null
@@ -125,6 +132,8 @@ async function getProducts(categoria?: string): Promise<Product[]> {
 
     if (categoria) {
       mockProducts = mockProducts.filter(p => p.category?.toUpperCase() === categoria.toUpperCase());
+    } else {
+      mockProducts = mockProducts.filter(p => p.featured === true);
     }
 
     if (error) {

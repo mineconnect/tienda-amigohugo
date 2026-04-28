@@ -15,5 +15,6 @@ export type Product = {
   notes: string[] | null;
   size: string | null;
   in_stock: boolean;
+  featured?: boolean;
   created_at: string;
 };

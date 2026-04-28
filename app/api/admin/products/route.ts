@@ -26,7 +26,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, description, price, image_url, category, notes, size, in_stock } = body;
+    const { name, description, price, image_url, category, notes, size, in_stock, featured } = body;
 
     if (!name || price === undefined) {
       return NextResponse.json({ error: "Nombre y precio son requeridos" }, { status: 400 });
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
 
     const { data, error } = await supabaseAdmin
       .from("products")
-      .insert([{ name, description, price, image_url, category, notes, size, in_stock: in_stock ?? true }])
+      .insert([{ name, description, price, image_url, category, notes, size, in_stock: in_stock ?? true, featured: featured ?? false }])
       .select()
       .single();
 

@@ -3,6 +3,9 @@
 -- Ejecutar en: Supabase → SQL Editor → New query
 -- =============================================
 
+-- SI YA TIENES LA TABLA, EJECUTA ESTO PRIMERO:
+-- ALTER TABLE products ADD COLUMN IF NOT EXISTS featured BOOLEAN DEFAULT false;
+
 -- Tabla de productos
 CREATE TABLE IF NOT EXISTS products (
   id          UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -14,6 +17,7 @@ CREATE TABLE IF NOT EXISTS products (
   notes       TEXT[],           -- Notas olfativas: ['Oud', 'Vainilla', 'Ámbar']
   size        TEXT,             -- Tamaño: '5ml', '10ml', '100ml'
   in_stock    BOOLEAN DEFAULT true,
+  featured    BOOLEAN DEFAULT false, -- Para controlar la sección de Tendencias
   created_at  TIMESTAMPTZ DEFAULT NOW()
 );
 

@@ -13,6 +13,7 @@ type FormData = {
   notes: string;
   size: string;
   in_stock: boolean;
+  featured: boolean;
 };
 
 const emptyForm: FormData = {
@@ -24,6 +25,7 @@ const emptyForm: FormData = {
   notes: "",
   size: "",
   in_stock: true,
+  featured: false,
 };
 
 export default function AdminDashboard() {
@@ -85,6 +87,7 @@ export default function AdminDashboard() {
       notes: (p.notes || []).join(", "),
       size: p.size || "",
       in_stock: p.in_stock,
+      featured: p.featured || false,
     });
     setError("");
     setShowForm(true);
@@ -105,6 +108,7 @@ export default function AdminDashboard() {
       notes: form.notes ? form.notes.split(",").map((n) => n.trim()).filter(Boolean) : [],
       size: form.size || null,
       in_stock: form.in_stock,
+      featured: form.featured,
     };
 
     const url = editing ? `/api/admin/products/${editing.id}` : "/api/admin/products";
@@ -383,20 +387,38 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              {/* In stock */}
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => setForm({ ...form, in_stock: !form.in_stock })}
-                  className={`relative w-10 h-5 rounded-full transition-colors ${form.in_stock ? "bg-primary" : "bg-outline-variant"}`}
-                >
-                  <span
-                    className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${form.in_stock ? "translate-x-5" : "translate-x-0.5"}`}
-                  />
-                </button>
-                <label className="text-xs uppercase tracking-widest text-on-surface-variant">
-                  {form.in_stock ? "Disponible" : "Sin stock"}
-                </label>
+              <div className="flex flex-wrap gap-8 items-center pt-2">
+                {/* In stock */}
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, in_stock: !form.in_stock })}
+                    className={`relative w-10 h-5 rounded-full transition-colors ${form.in_stock ? "bg-primary" : "bg-outline-variant"}`}
+                  >
+                    <span
+                      className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${form.in_stock ? "translate-x-5" : "translate-x-0.5"}`}
+                    />
+                  </button>
+                  <label className="text-xs uppercase tracking-widest text-on-surface-variant">
+                    {form.in_stock ? "Disponible" : "Sin stock"}
+                  </label>
+                </div>
+
+                {/* Featured */}
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, featured: !form.featured })}
+                    className={`relative w-10 h-5 rounded-full transition-colors ${form.featured ? "bg-secondary" : "bg-outline-variant"}`}
+                  >
+                    <span
+                      className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${form.featured ? "translate-x-5" : "translate-x-0.5"}`}
+                    />
+                  </button>
+                  <label className="text-xs uppercase tracking-widest text-on-surface-variant">
+                    {form.featured ? "Destacado (Tendencia)" : "Normal"}
+                  </label>
+                </div>
               </div>
 
               {error && <p className="text-error text-xs">{error}</p>}
