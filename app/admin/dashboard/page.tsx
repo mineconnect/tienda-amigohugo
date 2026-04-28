@@ -38,11 +38,26 @@ export default function AdminDashboard() {
   const router = useRouter();
 
   const loadProducts = async () => {
-    const res = await fetch("/api/admin/products");
-    if (res.status === 401) { router.push("/admin"); return; }
-    const data = await res.json();
-    setProducts(data);
-    setLoading(false);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/admin/products");
+      if (res.status === 401) {
+        router.push("/admin");
+        return;
+      }
+      if (!res.ok) {
+        console.error("API error:", res.status);
+        setProducts([]);
+        return;
+      }
+      const data = await res.json();
+      setProducts(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Error loading products:", err);
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => { loadProducts(); }, []);
