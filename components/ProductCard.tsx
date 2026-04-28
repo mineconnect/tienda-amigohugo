@@ -58,7 +58,7 @@ export default function ProductCard({ product }: Props) {
         {/* Out of stock badge */}
         {!product.in_stock && (
           <div className="absolute top-3 left-3 bg-red-500 text-white text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-sm">
-            Sold Out
+            Agotado
           </div>
         )}
       </div>
