@@ -58,7 +58,7 @@ export default function CartPage() {
             Tu Carrito
           </h1>
           <p className="text-xs uppercase tracking-widest text-on-surface-variant">
-            The Digital Sommelier's Curation
+            Selección Exclusiva de Artículos
           </p>
         </div>
 

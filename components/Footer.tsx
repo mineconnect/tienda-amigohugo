@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="bg-background w-full py-16 border-t border-outline-variant/20 mt-24">
@@ -12,10 +14,16 @@ export default function Footer() {
           <div>
             <h4 className="text-xs uppercase tracking-widest text-white mb-4 font-bold">EXPLORAR</h4>
             <div className="flex flex-col space-y-2">
-              {["Colecciones", "Fragancias", "Notas de Casa", "Trending", "Sets"].map((label) => (
-                <a key={label} href="#catalogo" className="text-xs text-gray-400 hover:text-white transition-colors">
-                  {label}
-                </a>
+              {[
+                { label: "Tendencias", href: "/" },
+                { label: "Electrónica", href: "/?categoria=ELECTRÓNICA#catalogo" },
+                { label: "Moda", href: "/?categoria=MODA#catalogo" },
+                { label: "Hogar", href: "/?categoria=HOGAR Y ESTILO#catalogo" },
+                { label: "Gadgets", href: "/?categoria=GADGETS#catalogo" }
+              ].map((item) => (
+                <Link key={item.label} href={item.href} className="text-xs text-gray-400 hover:text-white transition-colors">
+                  {item.label}
+                </Link>
               ))}
             </div>
           </div>

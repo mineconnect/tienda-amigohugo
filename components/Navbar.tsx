@@ -27,14 +27,20 @@ export default function Navbar() {
 
         {/* Desktop nav */}
         <div className="hidden md:flex space-x-8 items-center">
-            {["Colecciones", "Fragancias", "Home Decor", "Gadgets"].map((item) => (
-              <a
-                key={item}
-                href="#catalogo"
+            {[
+              { label: "Tendencias", href: "/" },
+              { label: "Electrónica", href: "/?categoria=ELECTRÓNICA#catalogo" },
+              { label: "Moda", href: "/?categoria=MODA#catalogo" },
+              { label: "Hogar", href: "/?categoria=HOGAR Y ESTILO#catalogo" },
+              { label: "Gadgets", href: "/?categoria=GADGETS#catalogo" }
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
                 className="font-body text-[10px] uppercase tracking-widest text-gray-400 hover:text-white transition-colors duration-300"
               >
-                {item}
-              </a>
+                {item.label}
+              </Link>
             ))}
         </div>
 
@@ -64,15 +70,21 @@ export default function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden bg-surface-container border-t border-outline-variant/20 px-6 py-4 space-y-3">
-          {["Colecciones", "Fragancias", "Notas de Casa", "Sets Descubrimiento"].map((item) => (
-            <a
-              key={item}
-              href="#catalogo"
+          {[
+            { label: "Tendencias", href: "/" },
+            { label: "Electrónica", href: "/?categoria=ELECTRÓNICA#catalogo" },
+            { label: "Moda", href: "/?categoria=MODA#catalogo" },
+            { label: "Hogar", href: "/?categoria=HOGAR Y ESTILO#catalogo" },
+            { label: "Gadgets", href: "/?categoria=GADGETS#catalogo" }
+          ].map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
               onClick={() => setMenuOpen(false)}
               className="block font-headline uppercase tracking-widest text-xs text-on-surface-variant hover:text-primary transition-colors py-2"
             >
-              {item}
-            </a>
+              {item.label}
+            </Link>
           ))}
         </div>
       )}
