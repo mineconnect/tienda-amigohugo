@@ -74,7 +74,7 @@ export default function CartPage() {
               href="/#catalogo"
               className="inline-flex items-center gap-2 bg-primary text-on-primary-fixed font-bold text-xs uppercase tracking-widest px-8 py-3.5 rounded-full hover:bg-primary-dim transition-colors"
             >
-              Ver Fragancias
+              Ver Catálogo
             </Link>
           </div>
         ) : (

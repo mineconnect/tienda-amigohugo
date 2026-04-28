@@ -314,18 +314,44 @@ export default function AdminDashboard() {
                 />
               </div>
 
-              {/* Image URL */}
+              {/* Image */}
               <div>
                 <label className="block text-xs uppercase tracking-widest text-on-surface-variant mb-1.5">
-                  URL de imagen
+                  Foto del producto (URL o Subir archivo)
                 </label>
-                <input
-                  type="url"
-                  value={form.image_url}
-                  onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-                  className="w-full bg-surface-container border border-outline-variant/30 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary transition-colors"
-                  placeholder="https://..."
-                />
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={form.image_url}
+                    onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+                    className="flex-1 bg-surface-container border border-outline-variant/30 rounded-lg px-4 py-2.5 text-sm text-on-surface focus:outline-none focus:border-primary transition-colors"
+                    placeholder="https://... o Base64"
+                  />
+                  <label className="bg-surface-container border border-outline-variant/30 px-4 py-2.5 rounded-lg cursor-pointer hover:border-primary transition-colors text-sm flex-shrink-0 text-on-surface-variant">
+                    <span className="material-symbols-outlined text-base align-middle">upload</span>
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = (ev) => {
+                          if (ev.target?.result) {
+                            setForm({ ...form, image_url: ev.target.result as string });
+                          }
+                        };
+                        reader.readAsDataURL(file);
+                      }}
+                    />
+                  </label>
+                </div>
+                {form.image_url && (
+                  <div className="mt-2 w-20 h-20 relative rounded-lg overflow-hidden border border-outline-variant/30">
+                    <Image src={form.image_url} alt="Preview" fill className="object-cover" unoptimized />
+                  </div>
+                )}
               </div>
 
               {/* Description */}

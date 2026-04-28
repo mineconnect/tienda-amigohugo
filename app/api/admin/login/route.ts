@@ -2,10 +2,13 @@ import { NextResponse } from "next/server";
 import { signAdminToken } from "@/lib/auth";
 
 export async function POST(req: Request) {
-  const { password } = await req.json();
+  const { email, password } = await req.json();
 
-  if (password !== process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ error: "Contraseña incorrecta" }, { status: 401 });
+  const validEmail = process.env.ADMIN_EMAIL || "admin@vhfdecants.com";
+  const validPassword = process.env.ADMIN_PASSWORD || "Hugo123VHF";
+
+  if (email !== validEmail || password !== validPassword) {
+    return NextResponse.json({ error: "Credenciales incorrectas" }, { status: 401 });
   }
 
   const token = await signAdminToken();
