@@ -32,6 +32,7 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [filterFeatured, setFilterFeatured] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
   const [form, setForm] = useState<FormData>(emptyForm);
   const [saving, setSaving] = useState(false);
@@ -167,13 +168,29 @@ export default function AdminDashboard() {
               {products.length} artículos en el catálogo
             </p>
           </div>
-          <button
-            onClick={openCreate}
-            className="inline-flex items-center gap-2 bg-primary text-on-primary-fixed font-bold text-xs uppercase tracking-widest px-6 py-3 rounded-full hover:bg-primary-dim transition-colors"
-          >
-            <span className="material-symbols-outlined text-base">add</span>
-            Nuevo producto
-          </button>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex bg-surface-container rounded-full p-1 border border-outline-variant/20">
+              <button
+                onClick={() => setFilterFeatured(false)}
+                className={`px-6 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all ${!filterFeatured ? "bg-primary text-on-primary-fixed shadow-lg" : "text-on-surface-variant hover:text-on-surface"}`}
+              >
+                Todos
+              </button>
+              <button
+                onClick={() => setFilterFeatured(true)}
+                className={`px-6 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all ${filterFeatured ? "bg-[#d946ef] text-white shadow-lg" : "text-on-surface-variant hover:text-on-surface"}`}
+              >
+                Tendencias
+              </button>
+            </div>
+            <button
+              onClick={openCreate}
+              className="inline-flex items-center gap-2 bg-primary text-on-primary-fixed font-bold text-xs uppercase tracking-widest px-6 py-3 rounded-full hover:bg-primary-dim transition-colors"
+            >
+              <span className="material-symbols-outlined text-base">add</span>
+              Nuevo producto
+            </button>
+          </div>
         </div>
 
         {/* Product list */}
@@ -191,7 +208,9 @@ export default function AdminDashboard() {
           </div>
         ) : (
           <div className="space-y-3">
-            {products.map((product) => (
+            {products
+              .filter((p) => (filterFeatured ? p.featured : true))
+              .map((product) => (
               <div
                 key={product.id}
                 className="flex items-center gap-4 glass-card rounded-xl p-4 border border-outline-variant/10"
@@ -211,6 +230,11 @@ export default function AdminDashboard() {
                 <div className="flex-grow min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     <p className="font-bold text-sm text-on-surface truncate">{product.name}</p>
+                    {product.featured && (
+                      <span className="text-[10px] uppercase tracking-widest text-[#d946ef] bg-[#d946ef]/10 px-2 py-0.5 rounded-full">
+                        Tendencia
+                      </span>
+                    )}
                     {!product.in_stock && (
                       <span className="text-[10px] uppercase tracking-widest text-error bg-error/10 px-2 py-0.5 rounded-full">
                         Sin stock
