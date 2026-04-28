@@ -5,19 +5,33 @@ import ProductGrid from "@/components/ProductGrid";
 import type { Product } from "@/lib/supabase";
 
 async function getProducts(): Promise<Product[]> {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-  const { data } = await supabase
-    .from("products")
-    .select("*")
-    .eq("in_stock", true)
-    .order("created_at", { ascending: false });
-  return data || [];
+  try {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://lexkcitlapztnqgacvvn.supabase.co";
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "dummy-key";
+    
+    if (supabaseKey === "dummy-key") {
+      console.warn("Supabase key is missing. Ensure environment variables are set in Vercel.");
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("in_stock", true)
+      .order("created_at", { ascending: false });
+      
+    if (error) {
+      console.error("Supabase Error:", error.message);
+      return [];
+    }
+    return data || [];
+  } catch (error) {
+    console.error("Error connecting to Supabase:", error);
+    return [];
+  }
 }
 
-export const revalidate = 60; // Revalida cada 60 segundos
+export const dynamic = "force-dynamic"; // Evita fallo de build estático en Vercel si faltan las variables de entorno
 
 export default async function HomePage() {
   const products = await getProducts();
