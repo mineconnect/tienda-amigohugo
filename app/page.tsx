@@ -111,7 +111,7 @@ export default async function HomePage() {
                     </h3>
                   </div>
                 </div>
-              ))
+              ))}
           </div>
         </section>
 
