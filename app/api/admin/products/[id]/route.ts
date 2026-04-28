@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
+export const dynamic = "force-dynamic";
+
 // PUT update product
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const body = await req.json();
