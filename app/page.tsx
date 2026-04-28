@@ -21,14 +21,115 @@ async function getProducts(): Promise<Product[]> {
       .eq("in_stock", true)
       .order("created_at", { ascending: false });
       
+    const mockProducts: Product[] = [
+      {
+        id: "mock-1",
+        name: "Tom Ford Oud Wood",
+        description: "Decant premium 5ml",
+        price: 15000,
+        image_url: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=800&q=80",
+        category: "Fragancias",
+        in_stock: true,
+        size: "5ml",
+        created_at: new Date().toISOString(),
+        notes: null
+      },
+      {
+        id: "mock-2",
+        name: "Baccarat Rouge 540",
+        description: "Decant premium 10ml",
+        price: 28000,
+        image_url: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80",
+        category: "Fragancias",
+        in_stock: true,
+        size: "10ml",
+        created_at: new Date().toISOString(),
+        notes: null
+      },
+      {
+        id: "mock-3",
+        name: "Creed Aventus",
+        description: "Decant premium 5ml",
+        price: 18000,
+        image_url: "https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=800&q=80",
+        category: "Fragancias",
+        in_stock: true,
+        size: "5ml",
+        created_at: new Date().toISOString(),
+        notes: null
+      },
+      {
+        id: "mock-4",
+        name: "Dior Sauvage Elixir",
+        description: "Decant premium 10ml",
+        price: 22000,
+        image_url: "https://images.unsplash.com/photo-1595535373192-fc8935cb17c7?auto=format&fit=crop&w=800&q=80",
+        category: "Fragancias",
+        in_stock: true,
+        size: "10ml",
+        created_at: new Date().toISOString(),
+        notes: null
+      }
+    ];
+
     if (error) {
       console.error("Supabase Error:", error.message);
-      return [];
+      return mockProducts;
     }
-    return data || [];
+    return data && data.length > 0 ? data : mockProducts;
   } catch (error) {
     console.error("Error connecting to Supabase:", error);
-    return [];
+    // Return mock products even if there's an exception so UI isn't empty
+    return [
+      {
+        id: "mock-1",
+        name: "Tom Ford Oud Wood",
+        description: "Decant premium 5ml",
+        price: 15000,
+        image_url: "https://images.unsplash.com/photo-1594035910387-fea47794261f?auto=format&fit=crop&w=800&q=80",
+        category: "Fragancias",
+        in_stock: true,
+        size: "5ml",
+        created_at: new Date().toISOString(),
+        notes: null
+      },
+      {
+        id: "mock-2",
+        name: "Baccarat Rouge 540",
+        description: "Decant premium 10ml",
+        price: 28000,
+        image_url: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=800&q=80",
+        category: "Fragancias",
+        in_stock: true,
+        size: "10ml",
+        created_at: new Date().toISOString(),
+        notes: null
+      },
+      {
+        id: "mock-3",
+        name: "Creed Aventus",
+        description: "Decant premium 5ml",
+        price: 18000,
+        image_url: "https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&w=800&q=80",
+        category: "Fragancias",
+        in_stock: true,
+        size: "5ml",
+        created_at: new Date().toISOString(),
+        notes: null
+      },
+      {
+        id: "mock-4",
+        name: "Dior Sauvage Elixir",
+        description: "Decant premium 10ml",
+        price: 22000,
+        image_url: "https://images.unsplash.com/photo-1595535373192-fc8935cb17c7?auto=format&fit=crop&w=800&q=80",
+        category: "Fragancias",
+        in_stock: true,
+        size: "10ml",
+        created_at: new Date().toISOString(),
+        notes: null
+      }
+    ];
   }
 }
 
@@ -96,9 +197,9 @@ export default async function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {[
                 { name: "ELECTRÓNICA", img: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=800&q=80" },
-                { name: "MODA", img: "https://images.unsplash.com/photo-1521335629791-ce4aec67ddaf?auto=format&fit=crop&w=800&q=80" },
+                { name: "MODA", img: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=80" },
                 { name: "HOGAR Y ESTILO", img: "https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=800&q=80" },
-                { name: "GADGETS", img: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80" },
+                { name: "GADGETS", img: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=800&q=80" },
               ].map((cat) => (
                 <div
                   key={cat.name}
