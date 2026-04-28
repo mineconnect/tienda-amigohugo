@@ -202,9 +202,27 @@ export default function AdminDashboard() {
           <div className="text-center py-24 text-on-surface-variant">
             <span className="material-symbols-outlined text-5xl mb-3 block opacity-30">inventory_2</span>
             <p className="text-sm uppercase tracking-widest mb-6">No hay productos todavía</p>
-            <button onClick={openCreate} className="text-primary text-sm hover:underline">
-              Crear el primer producto
-            </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button onClick={openCreate} className="bg-primary text-on-primary-fixed font-bold text-xs uppercase tracking-widest px-8 py-3 rounded-full hover:bg-primary-dim transition-colors">
+                Crear nuevo
+              </button>
+              <button 
+                onClick={async () => {
+                  if (!confirm("¿Quieres cargar los productos iniciales de tendencia?")) return;
+                  const res = await fetch("/api/admin/seed", { method: "POST" });
+                  const data = await res.json();
+                  if (data.ok) {
+                    alert("¡Listo! Ahora puedes editar los productos.");
+                    loadProducts();
+                  } else {
+                    alert("Error: " + (data.error || "No se pudo cargar"));
+                  }
+                }}
+                className="bg-secondary text-on-secondary-fixed font-bold text-xs uppercase tracking-widest px-8 py-3 rounded-full hover:bg-secondary-dim transition-colors"
+              >
+                Cargar Tendencias Iniciales
+              </button>
+            </div>
           </div>
         ) : (
           <div className="space-y-3">
