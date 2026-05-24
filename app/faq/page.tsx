@@ -6,9 +6,9 @@ import { createPublicClient } from "@/lib/publicSupabase";
 import type { Category } from "@/lib/supabase";
 
 export const metadata = {
-  title: "Preguntas frecuentes — VHF Importaciones de Belén",
+  title: "Preguntas frecuentes — VHF Decants",
   description:
-    "Resolvemos tus dudas sobre cómo comprar, formas de pago, envíos y devoluciones en VHF.",
+    "Resolvemos tus dudas sobre cómo comprar, formas de pago, envíos y devoluciones.",
 };
 
 export const dynamic = "force-dynamic";
@@ -42,7 +42,7 @@ const SECTIONS = [
       },
       {
         q: "¿Puedo pedir algo que no esté en el catálogo?",
-        a: "Sí. Si necesitás algo específico, escribime por WhatsApp y vemos si lo puedo conseguir en el próximo viaje.",
+        a: "Escribinos por WhatsApp y vemos si lo podemos conseguir.",
       },
     ],
   },
@@ -118,12 +118,12 @@ export default async function FaqPage() {
       <main className="pt-28 pb-24 px-6 md:px-10 max-w-5xl mx-auto">
         <section className="text-center py-16 md:py-24">
           <p className="eyebrow justify-center mb-5">Soporte</p>
-          <h1 className="font-display text-5xl md:text-7xl font-medium text-bone leading-[1.05] mb-6 text-balance">
+          <h1 className="font-display text-5xl md:text-7xl font-bold text-bone leading-[1.05] mb-6 text-balance">
             Preguntas{" "}
             <span className="italic text-gold-gradient">frecuentes</span>
           </h1>
           <p className="text-lg text-bone/70 max-w-2xl mx-auto leading-relaxed">
-            Todo lo que necesitás saber antes de comprar. Si algo no está acá, escribime por WhatsApp.
+            Todo lo que necesitás saber antes de comprar.
           </p>
         </section>
 
@@ -176,11 +176,11 @@ export default async function FaqPage() {
 
         <section className="mt-24 text-center glass-card hairline rounded-3xl p-12">
           <p className="eyebrow justify-center mb-5">¿Seguís con dudas?</p>
-          <h3 className="font-display text-3xl md:text-4xl text-bone mb-4">
-            Escribime directo
+          <h3 className="font-display text-3xl md:text-4xl font-bold text-bone mb-4">
+            Escribinos
           </h3>
           <p className="text-sm text-muted max-w-md mx-auto mb-8">
-            Te respondo yo mismo en minutos durante el día. Sin bots, sin formularios eternos.
+            Te respondemos en minutos.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a

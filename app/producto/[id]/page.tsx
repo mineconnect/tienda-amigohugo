@@ -122,7 +122,7 @@ export default async function ProductPage({
               <p className="eyebrow mb-5">{product.category.name}</p>
             )}
 
-            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-medium text-bone leading-[1.1] mb-6">
+            <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-bone leading-[1.1] mb-6">
               {product.name}
             </h1>
 
@@ -171,7 +171,7 @@ export default async function ProductPage({
                 <p className="text-[10px] uppercase tracking-widest text-muted mb-1">
                   Precio
                 </p>
-                <p className="font-display text-5xl font-medium text-gold-gradient">
+                <p className="font-display text-5xl font-bold text-gold-gradient">
                   ${product.price.toLocaleString("es-AR")}
                 </p>
               </div>

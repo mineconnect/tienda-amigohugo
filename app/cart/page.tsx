@@ -57,7 +57,7 @@ export default function CartPage() {
             Volver al catálogo
           </Link>
           <p className="eyebrow mb-4">Carrito</p>
-          <h1 className="font-display text-5xl md:text-6xl font-medium text-bone mb-3">
+          <h1 className="font-display text-5xl md:text-6xl font-bold text-bone mb-3">
             Tu <span className="italic text-gold-gradient">selección</span>
           </h1>
           <p className="text-sm text-muted uppercase tracking-widest">

@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
         )}
 
         <p className="text-center text-[10px] uppercase tracking-widest text-muted mt-6">
-          Solo Víctor Hugo · Belén · Catamarca
+          VHF Decants · Belén · Catamarca
         </p>
       </div>
     </div>

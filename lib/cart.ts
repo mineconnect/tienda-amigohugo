@@ -60,7 +60,7 @@ export function cartTotal(items: CartItem[]) {
 
 /**
  * Construye la URL de WhatsApp con el detalle del pedido pre-armado.
- * El cliente toca "enviar" y Víctor Hugo recibe el pedido completo.
+ * El cliente toca "enviar" y la tienda recibe el pedido completo.
  */
 export function buildWhatsAppMessage(
   items: CartItem[],
@@ -70,7 +70,7 @@ export function buildWhatsAppMessage(
     return `https://wa.me/${phone}`;
   }
 
-  const lines: string[] = ["¡Hola Víctor Hugo! Quiero hacer este pedido:", ""];
+  const lines: string[] = ["¡Hola! Quiero hacer este pedido:", ""];
 
   items.forEach((item) => {
     let line = `• ${item.name}`;

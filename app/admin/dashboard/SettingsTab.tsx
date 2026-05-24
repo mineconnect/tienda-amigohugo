@@ -13,7 +13,7 @@ const FIELD_GROUPS: { title: string; icon: string; fields: { key: string; label:
       { key: "hero_eyebrow",      label: "Texto chiquito sobre el título",     placeholder: "Importaciones · Belén · Catamarca" },
       { key: "hero_title",        label: "Título principal — parte 1",         placeholder: "Lo bueno se elige" },
       { key: "hero_title_italic", label: "Título principal — parte 2 (cursiva, en dorado)", placeholder: "con las manos." },
-      { key: "hero_subtitle",     label: "Subtítulo (texto explicativo)",      multiline: true, placeholder: "Víctor Hugo selecciona uno por uno..." },
+      { key: "hero_subtitle",     label: "Subtítulo (texto explicativo)",      multiline: true, placeholder: "Tienda online. Envíos a todo el país." },
       { key: "hero_cta_primary",  label: "Botón principal",                    placeholder: "Ver catálogo" },
       { key: "hero_cta_secondary",label: "Botón secundario",                   placeholder: "Hablar por WhatsApp" },
     ],
@@ -45,7 +45,7 @@ const FIELD_GROUPS: { title: string; icon: string; fields: { key: string; label:
     ],
   },
   {
-    title: "Sobre Víctor Hugo (sección con cita)",
+    title: "Sobre nosotros (sección con cita)",
     icon: "format_quote",
     fields: [
       { key: "about_title", label: "Título de la sección" },
