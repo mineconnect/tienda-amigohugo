@@ -1,4 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
+import { createPublicClient } from "@/lib/publicSupabase";
 import type { Settings } from "@/lib/supabase";
 
 /**
@@ -45,12 +45,8 @@ export async function getSettings(): Promise<Settings> {
     shipping_note: "Envío gratis en compras superiores a $50.000",
   };
 
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return fallback;
-
   try {
-    const sb = createClient(url, key);
+    const sb = createPublicClient();
     const { data, error } = await sb.from("site_settings").select("key,value");
     if (error || !data) return fallback;
     const merged: Settings = { ...fallback };

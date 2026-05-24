@@ -1,4 +1,3 @@
-import { createClient } from "@supabase/supabase-js";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,20 +6,13 @@ import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
 import AddToCartButton from "./AddToCartButton";
 import { getSettings } from "@/lib/settings";
+import { createPublicClient } from "@/lib/publicSupabase";
 import type { Product, Category } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
-function getClient() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return null;
-  return createClient(url, key);
-}
-
 async function getProduct(id: string): Promise<Product | null> {
-  const sb = getClient();
-  if (!sb) return null;
+  const sb = createPublicClient();
   const { data, error } = await sb
     .from("products")
     .select("*, category:categories(id, slug, name, description)")
@@ -31,8 +23,7 @@ async function getProduct(id: string): Promise<Product | null> {
 }
 
 async function getRelated(categoryId: string | null, excludeId: string) {
-  const sb = getClient();
-  if (!sb) return [];
+  const sb = createPublicClient();
   let query = sb
     .from("products")
     .select("*, category:categories(id, slug, name)")
@@ -45,8 +36,7 @@ async function getRelated(categoryId: string | null, excludeId: string) {
 }
 
 async function getCategories(): Promise<Category[]> {
-  const sb = getClient();
-  if (!sb) return [];
+  const sb = createPublicClient();
   const { data } = await sb
     .from("categories")
     .select("*")
