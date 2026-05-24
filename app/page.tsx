@@ -1,10 +1,9 @@
-import { createClient } from "@supabase/supabase-js";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
 import type { Product, Category } from "@/lib/supabase";
 import { getSettings } from "@/lib/settings";
-import Image from "next/image";
+import { createPublicClient } from "@/lib/publicSupabase";
 import Link from "next/link";
 
 async function getData(categoria?: string): Promise<{
@@ -12,14 +11,8 @@ async function getData(categoria?: string): Promise<{
   categories: Category[];
   selectedCategory: Category | null;
 }> {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || !supabaseKey) {
-    return { products: [], categories: [], selectedCategory: null };
-  }
-
   try {
-    const sb = createClient(supabaseUrl, supabaseKey);
+    const sb = createPublicClient();
 
     const [catsRes, catSelRes] = await Promise.all([
       sb.from("categories").select("*").eq("active", true).order("sort_order"),

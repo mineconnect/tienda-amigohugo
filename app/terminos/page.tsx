@@ -1,7 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { getSettings } from "@/lib/settings";
+import { createPublicClient } from "@/lib/publicSupabase";
 import type { Category } from "@/lib/supabase";
 
 export const metadata = {
@@ -12,11 +12,8 @@ export const metadata = {
 export const dynamic = "force-dynamic";
 
 async function getCategories(): Promise<Category[]> {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (!url || !key) return [];
   try {
-    const sb = createClient(url, key);
+    const sb = createPublicClient();
     const { data } = await sb
       .from("categories")
       .select("*")

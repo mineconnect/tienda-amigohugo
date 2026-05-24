@@ -23,16 +23,16 @@ En **Settings → API** anotá:
 
 ### 2. Variables de entorno en Vercel
 
-En Vercel → Settings → Environment Variables, agregá:
+En Vercel → Settings → Environment Variables, agregá **solo estas 3 secretas** (la URL pública y la anon key tienen defaults bakeados en el código — son claves públicas por diseño):
 
 | Variable | Cómo se genera |
 |---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | De Supabase → Settings → API |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | De Supabase → Settings → API |
 | `SUPABASE_SERVICE_ROLE_KEY` | De Supabase → Settings → API (¡secret!) |
 | `ADMIN_EMAIL` | El correo del admin (ej: `hugo@vhfbelen.com.ar`) |
-| `ADMIN_PASSWORD` | Contraseña fuerte (16+ caracteres) |
+| `ADMIN_PASSWORD` | Contraseña fuerte (12+ caracteres) |
 | `ADMIN_JWT_SECRET` | `openssl rand -base64 48` (mín. 32 caracteres) |
+
+Si querés usar OTRO proyecto Supabase (no el default), seteá también `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` para sobrescribir.
 
 ### 3. Deploy
 
