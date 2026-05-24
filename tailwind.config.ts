@@ -56,8 +56,8 @@ const config: Config = {
         error: "#e87171",
       },
       fontFamily: {
-        display: ["'Cormorant Garamond'", "'Noto Serif'", "serif"],
-        body: ["'Inter Tight'", "Inter", "sans-serif"],
+        display: ["'Inter Tight'", "Inter", "system-ui", "sans-serif"],
+        body: ["'Inter Tight'", "Inter", "system-ui", "sans-serif"],
         mono: ["'JetBrains Mono'", "monospace"],
       },
       letterSpacing: {

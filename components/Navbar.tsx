@@ -39,18 +39,10 @@ export default function Navbar({ categories = [] }: { categories?: Category[] })
       }`}
     >
       <div className="flex justify-between items-center px-4 sm:px-6 md:px-10 h-16 sm:h-20 max-w-[1400px] mx-auto">
-        <Link href="/" className="group flex items-center gap-2 sm:gap-3">
-          <span className="font-display italic text-2xl sm:text-3xl text-gold-gradient leading-none">
-            V
+        <Link href="/" className="group flex items-center">
+          <span className="font-display text-base sm:text-lg font-bold tracking-tight text-bone">
+            VHF <span className="text-gold-400">Decants</span>
           </span>
-          <div className="flex flex-col leading-none">
-            <span className="font-display text-sm sm:text-base font-semibold tracking-wide text-bone">
-              VHF
-            </span>
-            <span className="hidden sm:block text-[9px] uppercase tracking-ultra text-gold-400/80 mt-1">
-              Belén · Catamarca
-            </span>
-          </div>
         </Link>
 
         <div className="hidden md:flex space-x-8 items-center">

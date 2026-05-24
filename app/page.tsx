@@ -104,7 +104,7 @@ export default async function HomePage({
               {settings.hero_eyebrow}
             </p>
 
-            <h1 className="font-display text-[clamp(2.4rem,9vw,6.5rem)] font-medium leading-[1.05] text-balance text-bone mb-6 sm:mb-8 animate-fade-up">
+            <h1 className="font-display text-[clamp(2.4rem,9vw,6.5rem)] font-bold leading-[1.05] text-balance text-bone mb-6 sm:mb-8 animate-fade-up">
               {settings.hero_title}
               <br />
               <span className="italic text-gold-gradient font-normal">
@@ -203,7 +203,7 @@ export default async function HomePage({
           <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10 sm:mb-14 gap-4">
             <div>
               <p className="eyebrow mb-3 sm:mb-4">Catálogo</p>
-              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-medium text-bone leading-tight">
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-bone leading-tight">
                 {selectedCategory ? (
                   <span className="italic text-gold-gradient">
                     {selectedCategory.name}
@@ -262,7 +262,7 @@ export default async function HomePage({
           <section className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 pb-16 sm:pb-24">
             <div className="text-center mb-10 sm:mb-14">
               <p className="eyebrow justify-center mb-3 sm:mb-4">Categorías</p>
-              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-medium text-bone">
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-bone">
                 Explorá{" "}
                 <span className="italic text-gold-gradient">por categoría</span>
               </h2>
@@ -295,41 +295,16 @@ export default async function HomePage({
           </section>
         )}
 
-        {/* SOBRE VÍCTOR HUGO */}
-        <section className="relative py-20 sm:py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(201,169,97,0.06),_transparent_70%)]" />
-          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
-            <p className="eyebrow justify-center mb-4 sm:mb-6">{settings.about_title}</p>
-            <p className="font-display italic text-xl sm:text-2xl md:text-4xl leading-snug text-bone/90 text-balance mb-8 sm:mb-10">
-              &ldquo;{settings.about_text}&rdquo;
-            </p>
-            <div className="divider-gold max-w-xs mx-auto mb-8">
-              <span className="material-symbols-outlined text-gold-400 text-[18px]">
-                explore
-              </span>
-            </div>
-            <Link
-              href="/sobre-nosotros"
-              className="inline-flex items-center gap-2 mt-4 text-xs uppercase tracking-widest text-gold-400 hover:text-gold-300 transition-colors"
-            >
-              Leer más
-              <span className="material-symbols-outlined text-[14px]">
-                arrow_forward
-              </span>
-            </Link>
-          </div>
-        </section>
-
         {/* CTA WHATSAPP */}
-        <section className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 pb-16 sm:pb-24">
+        <section className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 pb-16 sm:pb-24 pt-12 sm:pt-20">
           <div className="glass-card hairline rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-16 grid md:grid-cols-2 gap-8 md:gap-10 items-center">
             <div>
               <p className="eyebrow mb-3 sm:mb-4">¿Dudas?</p>
-              <h3 className="font-display text-2xl sm:text-3xl md:text-4xl text-bone mb-3 sm:mb-4">
-                Te asesoramos antes de comprar
+              <h3 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-bone mb-3 sm:mb-4">
+                Hablemos por WhatsApp
               </h3>
               <p className="text-sm text-muted leading-relaxed mb-8">
-                ¿No estás seguro de talles, colores o stock? Escribinos por WhatsApp y te respondemos al toque. Sin formularios, sin vueltas — directo con Víctor Hugo.
+                Te respondemos en minutos.
               </p>
               <div className="flex flex-wrap gap-3">
                 <a

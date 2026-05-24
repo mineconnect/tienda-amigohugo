@@ -1,13 +1,13 @@
 # VHF — Importaciones de Belén
 
-Tienda online de **Víctor Hugo Figueroa** (Belén, Catamarca) — productos seleccionados personalmente. Checkout 100% por WhatsApp; sin pasarela de pago en el sitio.
+**VHF Decants** — tienda online (Belén, Catamarca). Checkout 100% por WhatsApp; sin pasarela de pago en el sitio.
 
 ## Stack
 
 - **Next.js 14** (App Router, RSC)
 - **Supabase** (Postgres + Auth + RLS)
 - **Vercel** (hosting + cron job para mantener la DB despierta)
-- **Tailwind CSS** + Cormorant Garamond / Inter Tight
+- **Tailwind CSS** + Inter Tight
 - **Jest** para tests
 
 ## Setup en 5 pasos
@@ -73,7 +73,7 @@ app/
 ├── page.tsx                  # Home con catálogo + categorías + about
 ├── producto/[id]/            # Detalle de producto
 ├── cart/                     # Carrito + checkout WhatsApp
-├── sobre-nosotros/           # Historia de Víctor Hugo
+├── sobre-nosotros/           # Sobre la tienda
 ├── faq/                      # Preguntas frecuentes
 ├── terminos/                 # Términos y privacidad
 ├── admin/

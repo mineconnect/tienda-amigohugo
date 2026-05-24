@@ -44,11 +44,12 @@
 }
 
 @layer components {
-  /* Tipografía editorial */
+  /* Tipografía display — sans-serif limpia */
   .font-display {
-    font-family: "Cormorant Garamond", "Noto Serif", serif;
-    font-feature-settings: "liga", "dlig", "swsh";
-    letter-spacing: -0.01em;
+    font-family: "Inter Tight", Inter, system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    letter-spacing: -0.025em;
+    font-weight: 600;
   }
 
   /* Glass-card refinado */

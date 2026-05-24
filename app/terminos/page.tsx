@@ -37,7 +37,7 @@ export default async function TermsPage() {
       <main className="pt-28 pb-24 px-6 md:px-10 max-w-3xl mx-auto">
         <section className="text-center py-16">
           <p className="eyebrow justify-center mb-5">Legal</p>
-          <h1 className="font-display text-5xl md:text-6xl font-medium text-bone leading-[1.05] mb-6">
+          <h1 className="font-display text-5xl md:text-6xl font-bold text-bone leading-[1.05] mb-6">
             Términos &{" "}
             <span className="italic text-gold-gradient">Privacidad</span>
           </h1>
@@ -54,15 +54,13 @@ export default async function TermsPage() {
         <div className="space-y-12">
           <Block title="01 · Sobre la tienda">
             <p>
-              VHF es un emprendimiento personal de{" "}
-              <strong className="text-gold-400">Víctor Hugo Figueroa</strong>{" "}
-              con sede en Belén (Catamarca, Argentina). Comercializa productos seleccionados personalmente (ropa, calzado, bazar, hogar, accesorios, tecnología, entre otros).
+              VHF Decants es una tienda online con sede en Belén (Catamarca, Argentina). Comercializa ropa, calzado, bazar, hogar, accesorios y tecnología.
             </p>
           </Block>
 
           <Block title="02 · Productos">
             <p>
-              Todos los productos publicados son seleccionados personalmente por Víctor Hugo. Las fotos y descripciones son representativas; pueden existir leves variaciones de color por iluminación. Si tenés dudas sobre algún producto, consultanos por WhatsApp antes de comprar.
+              Las fotos y descripciones son representativas; pueden existir leves variaciones de color por iluminación. Si tenés dudas sobre algún producto, consultanos por WhatsApp antes de comprar.
             </p>
           </Block>
 
