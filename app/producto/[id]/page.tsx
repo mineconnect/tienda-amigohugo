@@ -6,42 +6,53 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
 import AddToCartButton from "./AddToCartButton";
-import type { Product } from "@/lib/supabase";
+import { getSettings } from "@/lib/settings";
+import type { Product, Category } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
-async function getProduct(id: string): Promise<Product | null> {
-  const supabaseUrl =
-    process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    "https://lexkcitlapztnqgacvvn.supabase.co";
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "dummy-key";
-  const supabase = createClient(supabaseUrl, supabaseKey);
+function getClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+}
 
-  const { data, error } = await supabase
+async function getProduct(id: string): Promise<Product | null> {
+  const sb = getClient();
+  if (!sb) return null;
+  const { data, error } = await sb
     .from("products")
-    .select("*")
+    .select("*, category:categories(id, slug, name, description)")
     .eq("id", id)
-    .single();
+    .maybeSingle();
   if (error || !data) return null;
   return data as Product;
 }
 
-async function getRelated(category: string | null, excludeId: string) {
-  const supabaseUrl =
-    process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    "https://lexkcitlapztnqgacvvn.supabase.co";
-  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "dummy-key";
-  const supabase = createClient(supabaseUrl, supabaseKey);
-
-  let query = supabase
+async function getRelated(categoryId: string | null, excludeId: string) {
+  const sb = getClient();
+  if (!sb) return [];
+  let query = sb
     .from("products")
-    .select("*")
+    .select("*, category:categories(id, slug, name)")
     .eq("in_stock", true)
     .neq("id", excludeId)
     .limit(4);
-  if (category) query = query.ilike("category", `%${category}%`);
+  if (categoryId) query = query.eq("category_id", categoryId);
   const { data } = await query;
   return (data as Product[]) || [];
+}
+
+async function getCategories(): Promise<Category[]> {
+  const sb = getClient();
+  if (!sb) return [];
+  const { data } = await sb
+    .from("categories")
+    .select("*")
+    .eq("active", true)
+    .order("sort_order");
+  return (data as Category[]) || [];
 }
 
 export default async function ProductPage({
@@ -52,23 +63,17 @@ export default async function ProductPage({
   const product = await getProduct(params.id);
   if (!product) notFound();
 
-  const related = await getRelated(product.category, product.id);
-
-  // Reparto simbólico de la pirámide olfativa
-  const notes = product.notes || [];
-  const top = notes.slice(0, Math.ceil(notes.length / 3));
-  const heart = notes.slice(
-    Math.ceil(notes.length / 3),
-    Math.ceil((notes.length * 2) / 3)
-  );
-  const base = notes.slice(Math.ceil((notes.length * 2) / 3));
+  const [related, categories, settings] = await Promise.all([
+    getRelated(product.category_id, product.id),
+    getCategories(),
+    getSettings(),
+  ]);
 
   return (
     <>
-      <Navbar />
+      <Navbar categories={categories} />
       <main className="pt-28 pb-24 px-6 md:px-10 max-w-[1400px] mx-auto min-h-screen">
-        {/* Migas */}
-        <nav className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted mb-10">
+        <nav className="flex items-center flex-wrap gap-2 text-[10px] uppercase tracking-widest text-muted mb-10">
           <Link href="/" className="hover:text-gold-400">
             Inicio
           </Link>
@@ -80,15 +85,17 @@ export default async function ProductPage({
             <>
               <span>/</span>
               <Link
-                href={`/?categoria=${encodeURIComponent(product.category)}#catalogo`}
+                href={`/?categoria=${product.category.slug}#catalogo`}
                 className="hover:text-gold-400"
               >
-                {product.category}
+                {product.category.name}
               </Link>
             </>
           )}
           <span>/</span>
-          <span className="text-bone/80">{product.name}</span>
+          <span className="text-bone/80 normal-case tracking-normal">
+            {product.name}
+          </span>
         </nav>
 
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20">
@@ -107,14 +114,14 @@ export default async function ProductPage({
             ) : (
               <div className="w-full h-full flex items-center justify-center">
                 <span className="material-symbols-outlined text-8xl text-gold-400/30">
-                  local_florist
+                  inventory_2
                 </span>
               </div>
             )}
             <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink-950/60 to-transparent pointer-events-none" />
-            {product.size && (
-              <div className="absolute top-5 left-5 px-3 py-1.5 bg-ink-950/70 backdrop-blur-md rounded-full text-[10px] font-medium uppercase tracking-widest text-gold-300 border border-gold-400/20">
-                Tamaño · {product.size}
+            {product.featured && (
+              <div className="absolute top-5 left-5 px-3 py-1.5 bg-gold-400/95 rounded-full text-[10px] font-bold uppercase tracking-widest text-ink-950">
+                ★ Destacado
               </div>
             )}
           </div>
@@ -122,7 +129,7 @@ export default async function ProductPage({
           {/* Info */}
           <div className="flex flex-col justify-center">
             {product.category && (
-              <p className="eyebrow mb-5">{product.category}</p>
+              <p className="eyebrow mb-5">{product.category.name}</p>
             )}
 
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-medium text-bone leading-[1.1] mb-6">
@@ -135,7 +142,40 @@ export default async function ProductPage({
               </p>
             )}
 
-            {/* Precio + CTA */}
+            {/* Atributos */}
+            {(product.size || product.color || product.stock_qty > 0) && (
+              <div className="flex flex-wrap gap-3 mb-8">
+                {product.size && (
+                  <div className="px-4 py-2 bg-ink-900/50 border border-gold-400/15 rounded-full">
+                    <span className="text-[10px] uppercase tracking-widest text-muted">
+                      Talle
+                    </span>
+                    <span className="ml-2 text-sm text-bone">
+                      {product.size}
+                    </span>
+                  </div>
+                )}
+                {product.color && (
+                  <div className="px-4 py-2 bg-ink-900/50 border border-gold-400/15 rounded-full">
+                    <span className="text-[10px] uppercase tracking-widest text-muted">
+                      Color
+                    </span>
+                    <span className="ml-2 text-sm text-bone">
+                      {product.color}
+                    </span>
+                  </div>
+                )}
+                {product.stock_qty > 0 && product.in_stock && (
+                  <div className="px-4 py-2 bg-emerald-500/10 border border-emerald-400/30 rounded-full">
+                    <span className="text-[10px] uppercase tracking-widest text-emerald-300">
+                      {product.stock_qty} disponibles
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Precio */}
             <div className="flex items-end gap-6 mb-10 pb-10 border-b border-gold-400/15">
               <div>
                 <p className="text-[10px] uppercase tracking-widest text-muted mb-1">
@@ -149,29 +189,10 @@ export default async function ProductPage({
 
             <AddToCartButton product={product} />
 
-            {/* Pirámide olfativa */}
-            {notes.length > 0 && (
-              <div className="mt-12">
-                <p className="eyebrow mb-6">Pirámide olfativa</p>
-                <div className="space-y-5">
-                  {top.length > 0 && (
-                    <NotesRow label="Salida" notes={top} weight={1} />
-                  )}
-                  {heart.length > 0 && (
-                    <NotesRow label="Corazón" notes={heart} weight={2} />
-                  )}
-                  {base.length > 0 && (
-                    <NotesRow label="Fondo" notes={base} weight={3} />
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Garantías inline */}
             <div className="grid grid-cols-3 gap-3 mt-10 pt-8 border-t border-gold-400/10">
               {[
-                { icon: "verified", lbl: "100% Original" },
-                { icon: "local_shipping", lbl: "Envío 24-48h" },
+                { icon: "local_shipping", lbl: "Envíos al país" },
+                { icon: "verified_user", lbl: "Compra segura" },
                 { icon: "support_agent", lbl: "Asesoría WhatsApp" },
               ].map((g) => (
                 <div
@@ -197,7 +218,7 @@ export default async function ProductPage({
               <div>
                 <p className="eyebrow mb-3">También te puede gustar</p>
                 <h2 className="font-display text-3xl md:text-4xl text-bone">
-                  De la misma familia
+                  Productos similares
                 </h2>
               </div>
               <Link
@@ -211,40 +232,7 @@ export default async function ProductPage({
           </section>
         )}
       </main>
-      <Footer />
+      <Footer categories={categories} settings={settings} />
     </>
-  );
-}
-
-function NotesRow({
-  label,
-  notes,
-  weight,
-}: {
-  label: string;
-  notes: string[];
-  weight: number;
-}) {
-  return (
-    <div className="grid grid-cols-[80px_1fr] gap-6 items-start">
-      <div className="text-[10px] uppercase tracking-widest text-gold-400 pt-1.5">
-        {label}
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {notes.map((n) => (
-          <span
-            key={n}
-            className="note-tag"
-            style={{
-              fontSize: weight === 3 ? "0.7rem" : "0.65rem",
-              padding:
-                weight === 3 ? "0.35rem 0.85rem" : "0.25rem 0.65rem",
-            }}
-          >
-            {n}
-          </span>
-        ))}
-      </div>
-    </div>
   );
 }

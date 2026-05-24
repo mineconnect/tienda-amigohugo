@@ -1,160 +1,101 @@
-# VHF Decants — Guía de instalación completa
+# VHF — Importaciones de Belén
 
-## Resumen de lo que vas a tener
+Tienda online de **Víctor Hugo Figueroa** (Belén, Catamarca) — productos importados de Salta y Bolivia. Checkout 100% por WhatsApp; sin pasarela de pago en el sitio.
 
-- ✅ Página web en **Vercel** (gratis, siempre activa, nunca se pausa)
-- ✅ Base de datos en **Supabase** (gratis, PostgreSQL en la nube)
-- ✅ Panel administrador en `/admin` para agregar/editar/eliminar productos
-- ✅ Carrito de compras → checkout por **WhatsApp** (+54 9 3834 78-9035)
-- ✅ Cron job diario para mantener Supabase activo
+## Stack
 
----
+- **Next.js 14** (App Router, RSC)
+- **Supabase** (Postgres + Auth + RLS)
+- **Vercel** (hosting + cron job para mantener la DB despierta)
+- **Tailwind CSS** + Cormorant Garamond / Inter Tight
+- **Jest** para tests
 
-## PASO 1 — Crear la base de datos en Supabase
+## Setup en 5 pasos
 
-1. Entrá a **https://supabase.com** y creá una cuenta gratuita (o iniciá sesión)
-2. Hacé clic en **"New project"**
-3. Completá:
-   - **Name**: `vhf-decants`
-   - **Database Password**: anotala, la vas a necesitar
-   - **Region**: elegí **South America (São Paulo)** para mejor velocidad
-4. Esperá ~2 minutos mientras se crea el proyecto
-5. Una vez creado, andá al menú izquierdo → **SQL Editor** → **New query**
-6. Pegá todo el contenido del archivo `supabase_schema.sql` y hacé clic en **Run**
-7. Deberías ver "Success. No rows returned" — significa que la tabla se creó correctamente
+### 1. Base de datos (Supabase)
 
-### Obtener las claves de Supabase
+Si todavía no tenés la base lista, andá a [Supabase](https://app.supabase.com) y aplicá la migration que está en `supabase/migrations/0001_init.sql`. Si ya está creada, salteá este paso.
 
-1. En el menú izquierdo → **Settings** → **API**
-2. Anotá estos tres valores:
-   - **Project URL** (empieza con `https://`)
-   - **anon public** (clave pública)
-   - **service_role** (clave privada — ¡nunca la compartas!)
+En **Settings → API** anotá:
+- **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
+- **anon public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- **service_role secret** → `SUPABASE_SERVICE_ROLE_KEY` (¡nunca exponer!)
 
----
+### 2. Variables de entorno en Vercel
 
-## PASO 2 — Subir el código a GitHub
+En Vercel → Settings → Environment Variables, agregá:
 
-1. Abrí **https://github.com** e iniciá sesión
-2. Hacé clic en **"New repository"**
-   - **Repository name**: `vhf-decants`
-   - Dejalo en **Private** (más seguro)
-   - No marques nada más → **"Create repository"**
-3. En tu Mac, abrí **Terminal** y ejecutá estos comandos:
+| Variable | Cómo se genera |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | De Supabase → Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | De Supabase → Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | De Supabase → Settings → API (¡secret!) |
+| `ADMIN_EMAIL` | El correo del admin (ej: `hugo@vhfbelen.com.ar`) |
+| `ADMIN_PASSWORD` | Contraseña fuerte (16+ caracteres) |
+| `ADMIN_JWT_SECRET` | `openssl rand -base64 48` (mín. 32 caracteres) |
+
+### 3. Deploy
+
+Vercel detecta cualquier push a `main` y despliega automáticamente. La home queda en `https://vhfdecants.vercel.app/` (o el dominio que configures).
+
+### 4. Cargar productos
+
+1. Andá a `/admin` y entrá con `ADMIN_EMAIL` + `ADMIN_PASSWORD`.
+2. En la solapa **Categorías** revisá las que vienen pre-cargadas y editá lo que quieras.
+3. En la solapa **Productos** subí los artículos: nombre, precio, foto (URL o desde tu compu), talle, color, stock.
+4. En la solapa **Sitio** podés editar todos los textos de la home, contacto, beneficios, etc.
+
+### 5. La DB no se cae
+
+Vercel tiene configurado un **cron job diario** (`vercel.json` → `/api/ping`) que mantiene Supabase despierta. El plan free de Supabase pausa proyectos sin actividad por 7 días — el ping lo evita.
+
+## Desarrollo local
 
 ```bash
-# Entrá a la carpeta del proyecto (la que te di)
-cd ~/Downloads/vhf-decants   # o donde hayas guardado la carpeta
-
-# Iniciá git y subí el código
-git init
-git add .
-git commit -m "VHF Decants - primera versión"
-git branch -M main
-git remote add origin https://github.com/TU_USUARIO/vhf-decants.git
-git push -u origin main
+npm install
+cp .env.example .env.local
+# completá .env.local con tus valores
+npm run dev
 ```
 
-> Reemplazá `TU_USUARIO` con tu nombre de usuario de GitHub
+## Tests
 
----
-
-## PASO 3 — Desplegar en Vercel
-
-1. Entrá a **https://vercel.com** y creá una cuenta con tu cuenta de GitHub
-2. Hacé clic en **"Add New Project"**
-3. Buscá y seleccioná el repositorio `vhf-decants`
-4. En la sección **"Environment Variables"**, agregá estas variables una por una:
-
-| Variable | Valor |
-|----------|-------|
-| `NEXT_PUBLIC_SUPABASE_URL` | La URL de tu proyecto Supabase |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | La clave `anon public` de Supabase |
-| `SUPABASE_SERVICE_ROLE_KEY` | La clave `service_role` de Supabase |
-| `ADMIN_PASSWORD` | La contraseña que quieras para el admin (ej: `VHF2024Admin!`) |
-| `ADMIN_JWT_SECRET` | Una cadena aleatoria larga (ej: `vhf-secret-key-muy-larga-2024-abc`) |
-
-5. Hacé clic en **"Deploy"**
-6. Esperá 2-3 minutos mientras Vercel construye el proyecto
-7. ¡Listo! Tu sitio estará en `https://vhf-decants.vercel.app`
-
----
-
-## PASO 4 — Conectar tu dominio existente (vhfdecants.vercel.app)
-
-Como ya tenés el proyecto en Vercel:
-1. En Vercel → tu proyecto → **Settings** → **Domains**
-2. El dominio `vhfdecants.vercel.app` ya debería estar asignado automáticamente
-
----
-
-## PASO 5 — Usar el panel de administrador
-
-1. Entrá a: `https://vhfdecants.vercel.app/admin`
-2. Ingresá la contraseña que configuraste en `ADMIN_PASSWORD`
-3. Desde ahí podés:
-   - ➕ **Agregar** nuevos productos (nombre, precio, tamaño, notas, imagen, categoría)
-   - ✏️ **Editar** cualquier producto existente
-   - 🗑️ **Eliminar** productos
-   - 🔄 **Activar/desactivar** stock de cada producto
-
-### ¿Cómo pongo imágenes a los productos?
-
-Tenés dos opciones:
-- **Opción A (más fácil)**: Subí la foto a [imgbb.com](https://imgbb.com) o [imgur.com](https://imgur.com) gratis, y pegá el link directo de la imagen en el campo "URL de imagen"
-- **Opción B**: Usá cualquier link de imagen de internet (que sea público)
-
----
-
-## Cómo funciona el carrito → WhatsApp
-
-1. El cliente navega la tienda y agrega productos al carrito
-2. Hace clic en **"Comprar por WhatsApp"**
-3. Se abre WhatsApp con un mensaje pre-armado así:
-
-```
-Hola! Quiero hacer el siguiente pedido:
-
-• Oud Wood Decant (5ml) — $3.500 x1
-• Baccarat Rouge 540 (5ml) — $4.200 x2
-
-Total: $11.900
-
-Aguardo tu respuesta para coordinar el envío. ¡Gracias!
-```
-
-4. El cliente solo tiene que tocar **Enviar** y vos recibís el pedido
-
----
-
-## ¿Se puede caer la base de datos?
-
-**No.** Se configuró un cron job en Vercel que le manda un "ping" a la base de datos todos los días al mediodía. Esto evita que Supabase ponga en pausa el proyecto por inactividad.
-
-Además, Vercel (el hosting) **nunca se pausa** en el plan gratuito.
-
----
-
-## Actualizaciones futuras
-
-Si en el futuro querés cambiar algo del código:
-1. Modificá los archivos en tu carpeta local
-2. En Terminal:
 ```bash
-git add .
-git commit -m "descripción del cambio"
-git push
+npm test
 ```
-3. Vercel detecta el cambio y actualiza el sitio automáticamente en ~2 minutos
 
----
+Cubre la lógica del carrito (`lib/cart.ts`) y la autenticación (`lib/auth.ts`).
 
-## URLs importantes
+## Estructura
 
-| Qué | URL |
-|-----|-----|
-| Tienda | `https://vhfdecants.vercel.app` |
-| Panel admin | `https://vhfdecants.vercel.app/admin` |
-| Dashboard admin | `https://vhfdecants.vercel.app/admin/dashboard` |
-| Supabase | `https://app.supabase.com` |
-| Vercel | `https://vercel.com` |
+```
+app/
+├── page.tsx                  # Home con catálogo + categorías + about
+├── producto/[id]/            # Detalle de producto
+├── cart/                     # Carrito + checkout WhatsApp
+├── sobre-nosotros/           # Historia de Víctor Hugo
+├── faq/                      # Preguntas frecuentes
+├── terminos/                 # Términos y privacidad
+├── admin/
+│   ├── page.tsx              # Login
+│   └── dashboard/            # Panel con 3 tabs (Productos, Categorías, Sitio)
+└── api/
+    ├── ping/                 # Cron Vercel → mantiene Supabase activo
+    ├── categories/           # GET público
+    └── admin/                # Login, productos, categorías, settings (protegidos)
+```
+
+## Auditoría de seguridad — checklist
+
+- ✅ `ADMIN_PASSWORD` comparado con `crypto.timingSafeEqual` (resistente a timing attacks)
+- ✅ `ADMIN_JWT_SECRET` obligatorio (sin fallback hardcodeado)
+- ✅ `SUPABASE_SERVICE_ROLE_KEY` solo en server (nunca expuesta al navegador)
+- ✅ Middleware protege TODOS los `/api/admin/*` (excepto `/login` y `/logout`)
+- ✅ Cookie `admin_token` con `httpOnly`, `secure`, `sameSite: strict`
+- ✅ RLS habilitado en `products`, `categories`, `site_settings` — lectura pública, escritura solo service role
+- ✅ Validación server-side de inputs (longitudes, números, slug pattern)
+- ✅ Sin pasarela de pago → no manejamos datos sensibles de tarjetas
+
+## Soporte
+
+Cualquier consulta técnica, escribir a [hola@vhfbelen.com.ar](mailto:hola@vhfbelen.com.ar) o por [WhatsApp](https://wa.me/5493834789035).

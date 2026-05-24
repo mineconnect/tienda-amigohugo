@@ -2,93 +2,62 @@ import { createClient } from "@supabase/supabase-js";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductGrid from "@/components/ProductGrid";
-import type { Product } from "@/lib/supabase";
+import type { Product, Category } from "@/lib/supabase";
+import { getSettings } from "@/lib/settings";
 import Image from "next/image";
 import Link from "next/link";
 
-async function getProducts(categoria?: string): Promise<Product[]> {
+async function getData(categoria?: string): Promise<{
+  products: Product[];
+  categories: Category[];
+  selectedCategory: Category | null;
+}> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!supabaseUrl || !supabaseKey) {
+    return { products: [], categories: [], selectedCategory: null };
+  }
+
   try {
-    const supabaseUrl =
-      process.env.NEXT_PUBLIC_SUPABASE_URL ||
-      "https://lexkcitlapztnqgacvvn.supabase.co";
-    const supabaseKey =
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "dummy-key";
+    const sb = createClient(supabaseUrl, supabaseKey);
 
-    if (supabaseKey === "dummy-key") {
-      console.warn(
-        "Supabase key is missing. Ensure environment variables are set in Vercel."
-      );
+    const [catsRes, catSelRes] = await Promise.all([
+      sb.from("categories").select("*").eq("active", true).order("sort_order"),
+      categoria
+        ? sb.from("categories").select("*").eq("slug", categoria).maybeSingle()
+        : Promise.resolve({ data: null }),
+    ]);
+
+    const categories = (catsRes.data as Category[]) || [];
+    const selectedCategory = (catSelRes.data as Category | null) || null;
+
+    let query = sb
+      .from("products")
+      .select("*, category:categories(id, slug, name)")
+      .eq("in_stock", true);
+
+    if (selectedCategory) {
+      query = query.eq("category_id", selectedCategory.id);
+    } else {
+      query = query.eq("featured", true);
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    let query = supabase.from("products").select("*").eq("in_stock", true);
+    const { data: products } = await query
+      .order("sort_order", { ascending: true })
+      .order("created_at", { ascending: false });
 
-    if (categoria) {
-      query = query.ilike("category", `%${categoria}%`);
-    }
-
-    const { data, error } = await query.order("created_at", {
-      ascending: false,
-    });
-
-    if (error) {
-      console.error("Supabase Error:", error.message);
-      return [];
-    }
-    return data || [];
-  } catch (error) {
-    console.error("Error connecting to Supabase:", error);
-    return [];
+    return {
+      products: (products as Product[]) || [],
+      categories,
+      selectedCategory,
+    };
+  } catch (err) {
+    console.error("Error loading home data:", err);
+    return { products: [], categories: [], selectedCategory: null };
   }
 }
 
 export const dynamic = "force-dynamic";
-
-const FAMILIES = [
-  {
-    name: "Niche",
-    desc: "Casas exclusivas. Tiraje limitado.",
-    img: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    name: "Designer",
-    desc: "Íconos del mainstream de lujo.",
-    img: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    name: "Árabes",
-    desc: "Oud, ámbar y resinas de Oriente.",
-    img: "https://images.unsplash.com/photo-1610461888750-10bfc601b874?auto=format&fit=crop&w=900&q=80",
-  },
-  {
-    name: "Editorial",
-    desc: "Nuestra selección curada del mes.",
-    img: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=900&q=80",
-  },
-];
-
-const VALUE_PROPS = [
-  {
-    icon: "verified",
-    title: "100% Originales",
-    desc: "Fraccionados desde el frasco original. Cada decant lleva firma del lote.",
-  },
-  {
-    icon: "science",
-    title: "Fraccionado Profesional",
-    desc: "Atomizadores nuevos de vidrio. Trasvasado en ambiente controlado.",
-  },
-  {
-    icon: "local_shipping",
-    title: "Envíos a todo el país",
-    desc: "Despacho 24-48 hs por Andreani y Correo Argentino. Tracking incluido.",
-  },
-  {
-    icon: "support_agent",
-    title: "Asesoría Olfativa",
-    desc: "Ayuda a elegir según tu perfil, ocasión y temporada. Por WhatsApp.",
-  },
-];
 
 export default async function HomePage({
   searchParams,
@@ -96,34 +65,57 @@ export default async function HomePage({
   searchParams: { categoria?: string };
 }) {
   const categoria = searchParams?.categoria;
-  const products = await getProducts(categoria);
+  const [{ products, categories, selectedCategory }, settings] = await Promise.all([
+    getData(categoria),
+    getSettings(),
+  ]);
+
+  const valueProps = [
+    {
+      icon: "savings",
+      title: settings.valueprop_1_title,
+      desc: settings.valueprop_1_desc,
+    },
+    {
+      icon: "checklist",
+      title: settings.valueprop_2_title,
+      desc: settings.valueprop_2_desc,
+    },
+    {
+      icon: "local_shipping",
+      title: settings.valueprop_3_title,
+      desc: settings.valueprop_3_desc,
+    },
+    {
+      icon: "support_agent",
+      title: settings.valueprop_4_title,
+      desc: settings.valueprop_4_desc,
+    },
+  ];
 
   return (
     <>
-      <Navbar />
+      <Navbar categories={categories} />
       <main className="relative">
-        {/* ───────────────── HERO ───────────────── */}
+        {/* HERO */}
         <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden">
-          {/* Background atmospheric layers */}
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(201,169,97,0.12),_transparent_55%)]" />
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_rgba(183,148,246,0.06),_transparent_60%)]" />
-            {/* Líneas finas doradas tipo art-deco */}
             <div className="absolute inset-x-0 top-1/2 h-px bg-gradient-to-r from-transparent via-gold-400/20 to-transparent" />
             <div className="absolute inset-y-0 left-1/2 w-px bg-gradient-to-b from-transparent via-gold-400/15 to-transparent" />
           </div>
 
-          {/* Frame contenido */}
           <div className="relative z-10 max-w-5xl mx-auto text-center pt-20">
             <p className="eyebrow justify-center mb-8 animate-fade-in">
-              Atelier de Perfumería · Est. 2024
+              {settings.hero_eyebrow}
             </p>
 
             <h1 className="font-display text-[clamp(2.8rem,8vw,6.5rem)] font-medium leading-[1.05] text-balance text-bone mb-8 animate-fade-up">
-              El arte de oler bien,
+              {settings.hero_title}
               <br />
               <span className="italic text-gold-gradient font-normal">
-                fraccionado en 5 ml.
+                {settings.hero_title_italic}
               </span>
             </h1>
 
@@ -131,9 +123,7 @@ export default async function HomePage({
               className="max-w-2xl mx-auto text-base md:text-lg text-bone/70 leading-relaxed mb-12 animate-fade-up"
               style={{ animationDelay: "150ms" }}
             >
-              Probá los perfumes más codiciados del planeta antes de invertir en
-              un frasco completo. Decants 100% originales fraccionados a mano
-              desde el frasco oficial.
+              {settings.hero_subtitle}
             </p>
 
             <div
@@ -141,25 +131,32 @@ export default async function HomePage({
               style={{ animationDelay: "300ms" }}
             >
               <Link href="#catalogo" className="btn-gold">
-                Explorar Catálogo
+                {settings.hero_cta_primary || "Ver catálogo"}
                 <span className="material-symbols-outlined text-[16px]">
                   arrow_forward
                 </span>
               </Link>
-              <Link href="/sobre-nosotros" className="btn-outline">
-                Qué es un decant
-              </Link>
+              <a
+                href={`https://wa.me/${settings.contact_whatsapp || "5493834789035"}`}
+                target="_blank"
+                rel="noopener"
+                className="btn-outline"
+              >
+                <span className="material-symbols-outlined text-[16px]">
+                  chat
+                </span>
+                {settings.hero_cta_secondary || "Hablar por WhatsApp"}
+              </a>
             </div>
 
-            {/* Métricas debajo del hero */}
             <div
               className="grid grid-cols-3 gap-4 max-w-2xl mx-auto mt-20 pt-10 border-t border-gold-400/10 animate-fade-up"
               style={{ animationDelay: "450ms" }}
             >
               {[
-                { num: "120+", lbl: "Fragancias en stock" },
-                { num: "100%", lbl: "Originales garantizado" },
-                { num: "48h",  lbl: "Despacho promedio" },
+                { num: settings.metric_1_value, lbl: settings.metric_1_label },
+                { num: settings.metric_2_value, lbl: settings.metric_2_label },
+                { num: settings.metric_3_value, lbl: settings.metric_3_label },
               ].map((m) => (
                 <div key={m.lbl} className="text-center">
                   <div className="font-display text-3xl md:text-4xl text-gold-gradient">
@@ -173,7 +170,6 @@ export default async function HomePage({
             </div>
           </div>
 
-          {/* Scroll hint */}
           <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-fade-in">
             <span className="text-[9px] uppercase tracking-ultra text-muted">
               Descubrir
@@ -184,10 +180,10 @@ export default async function HomePage({
           </div>
         </section>
 
-        {/* ───────────────── BARRA DE VALORES ───────────────── */}
+        {/* VALUE PROPS */}
         <section className="border-y border-gold-400/10 bg-ink-900/40 backdrop-blur-sm">
           <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
-            {VALUE_PROPS.map((v) => (
+            {valueProps.map((v) => (
               <div
                 key={v.title}
                 className="flex flex-col items-center text-center md:flex-row md:text-left gap-4"
@@ -206,7 +202,7 @@ export default async function HomePage({
           </div>
         </section>
 
-        {/* ───────────────── CATÁLOGO ───────────────── */}
+        {/* CATÁLOGO */}
         <section
           id="catalogo"
           className="max-w-[1400px] mx-auto px-6 md:px-10 py-24"
@@ -215,25 +211,25 @@ export default async function HomePage({
             <div>
               <p className="eyebrow mb-4">Catálogo</p>
               <h2 className="font-display text-4xl md:text-5xl font-medium text-bone leading-tight">
-                {categoria ? (
-                  <>
-                    <span className="italic text-gold-gradient">
-                      {categoria}
-                    </span>
-                  </>
+                {selectedCategory ? (
+                  <span className="italic text-gold-gradient">
+                    {selectedCategory.name}
+                  </span>
                 ) : (
                   <>
-                    Tendencias <span className="italic text-gold-gradient">de la casa</span>
+                    Productos{" "}
+                    <span className="italic text-gold-gradient">destacados</span>
                   </>
                 )}
               </h2>
               <p className="text-sm text-muted mt-3 max-w-md">
-                {categoria
-                  ? "Selección curada para esta familia olfativa."
-                  : "Los decants más pedidos del mes, elegidos por nuestra comunidad."}
+                {selectedCategory
+                  ? selectedCategory.description ||
+                    "Selección curada para esta categoría."
+                  : "Lo que más nos están pidiendo este mes. ¿Buscás algo distinto? Mirá todas las categorías abajo."}
               </p>
             </div>
-            {categoria && (
+            {selectedCategory && (
               <Link
                 href="/#catalogo"
                 className="text-xs uppercase tracking-widest text-gold-400 hover:text-gold-300 flex items-center gap-2"
@@ -241,7 +237,7 @@ export default async function HomePage({
                 <span className="material-symbols-outlined text-[16px]">
                   arrow_back
                 </span>
-                Ver todo el catálogo
+                Ver todo
               </Link>
             )}
           </div>
@@ -249,16 +245,18 @@ export default async function HomePage({
           {products.length === 0 ? (
             <div className="text-center py-32 border border-dashed border-gold-400/15 rounded-3xl">
               <span className="material-symbols-outlined text-7xl mb-6 block text-gold-400/30">
-                local_florist
+                inventory_2
               </span>
               <p className="text-sm uppercase tracking-widest text-muted mb-2">
-                No hay fragancias en esta categoría
+                {selectedCategory
+                  ? "No hay productos en esta categoría todavía"
+                  : "Cargando el catálogo..."}
               </p>
               <Link
                 href="/#catalogo"
                 className="text-xs uppercase tracking-widest text-gold-400 hover:underline"
               >
-                Volver al catálogo completo
+                {selectedCategory ? "Volver al catálogo completo" : "Ver todo"}
               </Link>
             </div>
           ) : (
@@ -266,76 +264,62 @@ export default async function HomePage({
           )}
         </section>
 
-        {/* ───────────────── FAMILIAS / CATEGORÍAS ───────────────── */}
-        <section className="max-w-[1400px] mx-auto px-6 md:px-10 pb-24">
-          <div className="text-center mb-14">
-            <p className="eyebrow justify-center mb-4">Familias</p>
-            <h2 className="font-display text-4xl md:text-5xl font-medium text-bone">
-              Encontrá <span className="italic text-gold-gradient">tu universo</span>
-            </h2>
-          </div>
+        {/* CATEGORÍAS */}
+        {!selectedCategory && categories.length > 0 && (
+          <section className="max-w-[1400px] mx-auto px-6 md:px-10 pb-24">
+            <div className="text-center mb-14">
+              <p className="eyebrow justify-center mb-4">Categorías</p>
+              <h2 className="font-display text-4xl md:text-5xl font-medium text-bone">
+                Explorá{" "}
+                <span className="italic text-gold-gradient">por categoría</span>
+              </h2>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {FAMILIES.map((cat, idx) => (
-              <Link
-                href={`/?categoria=${encodeURIComponent(cat.name)}#catalogo`}
-                key={cat.name}
-                className="group relative h-[440px] rounded-3xl overflow-hidden border border-gold-400/10 cursor-pointer block hairline"
-                style={{ animationDelay: `${idx * 100}ms` }}
-              >
-                <Image
-                  src={cat.img}
-                  alt={cat.name}
-                  fill
-                  className="object-cover transition-transform duration-[1500ms] ease-out group-hover:scale-110"
-                  sizes="(max-width: 768px) 100vw, 25vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/50 to-ink-950/10 z-10" />
-                <div className="absolute inset-0 z-20 flex flex-col justify-end p-8">
-                  <h3 className="font-display text-3xl font-semibold text-bone mb-2 group-hover:text-gold-400 transition-colors duration-500">
-                    {cat.name}
-                  </h3>
-                  <p className="text-xs text-bone/70 leading-relaxed mb-4">
-                    {cat.desc}
-                  </p>
-                  <span className="text-[10px] uppercase tracking-widest text-gold-400 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    Explorar
-                    <span className="material-symbols-outlined text-[14px]">
-                      arrow_forward
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              {categories.map((cat) => (
+                <Link
+                  href={`/?categoria=${cat.slug}#catalogo`}
+                  key={cat.id}
+                  className="group relative h-[260px] rounded-3xl overflow-hidden border border-gold-400/10 cursor-pointer block hairline bg-gradient-to-br from-ink-700 to-ink-900"
+                >
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(201,169,97,0.15),_transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  <div className="relative h-full z-10 flex flex-col items-center justify-center p-8 text-center">
+                    <span className="material-symbols-outlined text-5xl text-gold-400 mb-4 group-hover:scale-110 transition-transform duration-500">
+                      {cat.icon || "category"}
                     </span>
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </section>
+                    <h3 className="font-display text-2xl font-semibold text-bone mb-2 group-hover:text-gold-400 transition-colors duration-500">
+                      {cat.name}
+                    </h3>
+                    {cat.description && (
+                      <p className="text-[11px] text-muted leading-relaxed line-clamp-2">
+                        {cat.description}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
 
-        {/* ───────────────── HISTORIA / MANIFIESTO ───────────────── */}
+        {/* SOBRE VÍCTOR HUGO */}
         <section className="relative py-32 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(201,169,97,0.06),_transparent_70%)]" />
           <div className="relative max-w-4xl mx-auto px-6 text-center">
-            <p className="eyebrow justify-center mb-6">Manifiesto</p>
+            <p className="eyebrow justify-center mb-6">{settings.about_title}</p>
             <p className="font-display italic text-2xl md:text-4xl leading-snug text-bone/90 text-balance mb-10">
-              &ldquo;El perfume es la forma más intensa del recuerdo. Nuestra
-              misión es que puedas probar — sin riesgo — los que merecen quedar
-              en tu memoria.&rdquo;
+              &ldquo;{settings.about_text}&rdquo;
             </p>
             <div className="divider-gold max-w-xs mx-auto mb-8">
               <span className="material-symbols-outlined text-gold-400 text-[18px]">
-                spa
+                explore
               </span>
             </div>
-            <p className="text-sm text-muted max-w-2xl mx-auto leading-relaxed">
-              VHF nace de la frustración de gastar fortunas en frascos que
-              terminan olvidados en el cajón. Fraccionamos los perfumes más
-              icónicos del mundo para que descubras tu firma olfativa con la
-              libertad que merece.
-            </p>
             <Link
               href="/sobre-nosotros"
-              className="inline-flex items-center gap-2 mt-10 text-xs uppercase tracking-widest text-gold-400 hover:text-gold-300 transition-colors"
+              className="inline-flex items-center gap-2 mt-4 text-xs uppercase tracking-widest text-gold-400 hover:text-gold-300 transition-colors"
             >
-              Leer nuestra historia
+              Leer más
               <span className="material-symbols-outlined text-[14px]">
                 arrow_forward
               </span>
@@ -343,7 +327,7 @@ export default async function HomePage({
           </div>
         </section>
 
-        {/* ───────────────── FAQ TEASER ───────────────── */}
+        {/* CTA WHATSAPP */}
         <section className="max-w-[1400px] mx-auto px-6 md:px-10 pb-24">
           <div className="glass-card hairline rounded-3xl p-10 md:p-16 grid md:grid-cols-2 gap-10 items-center">
             <div>
@@ -352,13 +336,11 @@ export default async function HomePage({
                 Te asesoramos antes de comprar
               </h3>
               <p className="text-sm text-muted leading-relaxed mb-8">
-                ¿No sabés cuál elegir? Contanos qué te gusta — un perfume que ya
-                usás, una ocasión, una estación del año — y armamos un combo a
-                tu medida. Sin compromiso.
+                ¿No estás seguro de talles, colores o stock? Escribinos por WhatsApp y te respondemos al toque. Sin formularios, sin vueltas — directo con Víctor Hugo.
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href="https://wa.me/5493834789035?text=Hola%21%20Quiero%20asesor%C3%ADa%20olfativa"
+                  href={`https://wa.me/${settings.contact_whatsapp || "5493834789035"}?text=Hola%21%20Tengo%20una%20consulta`}
                   target="_blank"
                   rel="noopener"
                   className="btn-gold"
@@ -369,23 +351,23 @@ export default async function HomePage({
                   Hablar por WhatsApp
                 </a>
                 <Link href="/faq" className="btn-outline">
-                  Ver FAQ
+                  Ver preguntas frecuentes
                 </Link>
               </div>
             </div>
             <div className="space-y-4">
               {[
                 {
-                  q: "¿Son originales?",
-                  a: "Sí. Fraccionamos desde el frasco original y conservamos los lotes para chequeo.",
+                  q: "¿Hacen envíos a todo el país?",
+                  a: "Sí, despachamos por correo o encomienda a cualquier punto de Argentina con tracking.",
                 },
                 {
-                  q: "¿Cuánto rinde un 5 ml?",
-                  a: "Aprox. 60–80 sprays. Te alcanza para 1 a 2 meses de uso ocasional.",
+                  q: "¿Cómo pago?",
+                  a: "Transferencia bancaria, Mercado Pago o efectivo si retirás en Belén.",
                 },
                 {
-                  q: "¿Hacen envíos al interior?",
-                  a: "Sí. Despachamos por Andreani y Correo Argentino con tracking.",
+                  q: "¿Tienen local físico?",
+                  a: "Sí, en Belén (Catamarca). Coordinamos por WhatsApp para mostrarte.",
                 },
               ].map((f) => (
                 <details
@@ -409,7 +391,7 @@ export default async function HomePage({
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer categories={categories} settings={settings} />
     </>
   );
 }

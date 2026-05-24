@@ -1,100 +1,126 @@
+import { createClient } from "@supabase/supabase-js";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { getSettings } from "@/lib/settings";
+import type { Category } from "@/lib/supabase";
 
 export const metadata = {
-  title: "Términos y privacidad — VHF Decants",
-  description:
-    "Términos y condiciones de uso y política de privacidad de VHF Decants.",
+  title: "Términos y privacidad — VHF Importaciones de Belén",
+  description: "Términos de uso y política de privacidad de VHF.",
 };
 
-export default function TermsPage() {
+export const dynamic = "force-dynamic";
+
+async function getCategories(): Promise<Category[]> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return [];
+  try {
+    const sb = createClient(url, key);
+    const { data } = await sb
+      .from("categories")
+      .select("*")
+      .eq("active", true)
+      .order("sort_order");
+    return (data as Category[]) || [];
+  } catch {
+    return [];
+  }
+}
+
+export default async function TermsPage() {
+  const [categories, settings] = await Promise.all([
+    getCategories(),
+    getSettings(),
+  ]);
+
   return (
     <>
-      <Navbar />
+      <Navbar categories={categories} />
       <main className="pt-28 pb-24 px-6 md:px-10 max-w-3xl mx-auto">
         <section className="text-center py-16">
           <p className="eyebrow justify-center mb-5">Legal</p>
           <h1 className="font-display text-5xl md:text-6xl font-medium text-bone leading-[1.05] mb-6">
-            Términos & <span className="italic text-gold-gradient">Privacidad</span>
+            Términos &{" "}
+            <span className="italic text-gold-gradient">Privacidad</span>
           </h1>
           <p className="text-sm text-muted">
-            Última actualización · {new Date().toLocaleDateString("es-AR", { day: "numeric", month: "long", year: "numeric" })}
+            Última actualización ·{" "}
+            {new Date().toLocaleDateString("es-AR", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            })}
           </p>
         </section>
 
         <div className="space-y-12">
-          <Block title="01 · Sobre VHF Decants">
+          <Block title="01 · Sobre la tienda">
             <p>
-              VHF Decants es un emprendimiento argentino dedicado al
-              fraccionado y comercialización de decants de perfumes de lujo,
-              100% originales, adquiridos en boutiques oficiales y
-              distribuidores autorizados.
+              VHF es un emprendimiento personal de{" "}
+              <strong className="text-gold-400">Víctor Hugo Figueroa</strong>{" "}
+              con sede en Belén (Catamarca, Argentina). Comercializa productos importados desde Salta y Bolivia (ropa, calzado, bazar, hogar, accesorios, tecnología, entre otros).
             </p>
           </Block>
 
-          <Block title="02 · Producto">
+          <Block title="02 · Productos">
             <p>
-              Vendemos porciones (decants) de perfumes originales transvasadas
-              en atomizadores nuevos de vidrio. El líquido es idéntico al del
-              frasco original; solo cambia el envase. La marca del perfume
-              original es propiedad de sus respectivos titulares y se menciona
-              al solo efecto descriptivo.
+              Todos los productos publicados son seleccionados personalmente por Víctor Hugo. Las fotos y descripciones son representativas; pueden existir leves variaciones de color por iluminación. Si tenés dudas sobre algún producto, consultanos por WhatsApp antes de comprar.
             </p>
           </Block>
 
-          <Block title="03 · Compra y pago">
+          <Block title="03 · Cómo se compra">
             <p>
-              El pedido se confirma vía WhatsApp tras la selección del cliente
-              en el sitio. Aceptamos transferencia bancaria, Mercado Pago y
-              efectivo en Pago Fácil / Rapipago. La compra queda confirmada al
-              acreditarse el pago.
+              La compra se inicia agregando productos al carrito en este sitio. Al finalizar, el sistema abre WhatsApp con el pedido pre-armado. Una vez confirmado el pedido por mensaje, se coordina el pago y el envío. El sitio no procesa pagos automáticos.
             </p>
           </Block>
 
-          <Block title="04 · Envíos">
+          <Block title="04 · Pagos">
             <p>
-              Despachamos a toda Argentina por Andreani y Correo Argentino, en
-              24-48 hs hábiles desde la confirmación del pago. El cliente
-              recibe código de seguimiento. Los plazos de entrega dependen del
-              correo y son estimativos.
+              Aceptamos transferencia bancaria, Mercado Pago y efectivo (solo si se retira en Belén). El pedido queda reservado por 48 hs hasta la confirmación del pago; pasado ese plazo, se libera el stock.
             </p>
           </Block>
 
-          <Block title="05 · Cambios y devoluciones">
+          <Block title="05 · Envíos">
             <p>
-              Por norma de higiene no aceptamos devoluciones por gusto
-              personal una vez abierto el decant. Si el producto llega dañado o
-              presenta defectos, lo reponemos sin cargo. Productos cerrados y
-              sin uso pueden cambiarse dentro de los 10 días.
+              Despachamos a toda Argentina por correo o encomienda con código de seguimiento. Los plazos dependen del destino (3-12 días hábiles). El costo de envío se cotiza al confirmar el pedido y lo paga el comprador al correo, salvo promoción vigente.
             </p>
           </Block>
 
-          <Block title="06 · Privacidad de datos">
+          <Block title="06 · Cambios y devoluciones">
             <p>
-              Solo solicitamos los datos imprescindibles para gestionar tu
-              pedido (nombre, dirección y contacto). No los compartimos con
-              terceros, no los usamos para publicidad y los conservamos
-              únicamente por el plazo necesario para cumplir con obligaciones
-              fiscales.
+              Tenés 7 días desde la recepción para solicitar un cambio o devolución, siempre que el producto esté sin uso, con sus etiquetas originales y en condiciones de reventa. Los costos de envío de cambio son por cuenta del comprador, salvo que el producto haya tenido un defecto de fábrica.
             </p>
           </Block>
 
-          <Block title="07 · Contacto">
+          <Block title="07 · Privacidad de datos">
             <p>
-              Para cualquier consulta legal o comercial podés escribirnos a{" "}
-              <a href="mailto:hola@vhfdecants.com" className="text-gold-400 hover:underline">
-                hola@vhfdecants.com
+              Solo solicitamos los datos imprescindibles para gestionar tu pedido (nombre, dirección, contacto). No los compartimos con terceros, no los usamos para publicidad y los conservamos únicamente por el plazo necesario para cumplir con obligaciones fiscales.
+            </p>
+          </Block>
+
+          <Block title="08 · Contacto">
+            <p>
+              Para cualquier consulta podés escribirnos por WhatsApp al{" "}
+              <a
+                href={`https://wa.me/${settings.contact_whatsapp || "5493834789035"}`}
+                className="text-gold-400 hover:underline"
+              >
+                {settings.contact_whatsapp_display || "+54 9 3834 78-9035"}
               </a>{" "}
-              o por WhatsApp al{" "}
-              <a href="https://wa.me/5493834789035" className="text-gold-400 hover:underline">
-                +54 9 3834 78-9035
+              o por mail a{" "}
+              <a
+                href={`mailto:${settings.contact_email || "hola@vhfbelen.com.ar"}`}
+                className="text-gold-400 hover:underline"
+              >
+                {settings.contact_email || "hola@vhfbelen.com.ar"}
               </a>
               .
             </p>
           </Block>
         </div>
       </main>
-      <Footer />
+      <Footer categories={categories} settings={settings} />
     </>
   );
 }

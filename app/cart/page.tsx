@@ -63,7 +63,7 @@ export default function CartPage() {
           <p className="text-sm text-muted uppercase tracking-widest">
             {items.length === 0
               ? "Sin artículos"
-              : `${items.length} ${items.length === 1 ? "fragancia" : "fragancias"}`}
+              : `${items.length} ${items.length === 1 ? "artículo" : "artículos"}`}
           </p>
         </div>
 
@@ -104,7 +104,7 @@ export default function CartPage() {
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <span className="material-symbols-outlined text-3xl text-gold-400/30">
-                          local_florist
+                          inventory_2
                         </span>
                       </div>
                     )}
@@ -119,7 +119,7 @@ export default function CartPage() {
                         </h3>
                         {item.size && (
                           <p className="text-[10px] uppercase tracking-widest text-muted mt-1">
-                            Tamaño · {item.size}
+                            Talle · {item.size}
                           </p>
                         )}
                       </div>

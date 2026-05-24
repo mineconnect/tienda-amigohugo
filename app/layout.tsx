@@ -2,32 +2,31 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VHF Decants — Atelier de Perfumería de Lujo",
+  title: "VHF — Importaciones de Belén · Lo mejor de Salta y Bolivia",
   description:
-    "Decants 100% originales de los mejores perfumes nicho y designer del mundo. Fraccionados desde el frasco original. Envíos a toda Argentina.",
+    "Tienda de Víctor Hugo Figueroa. Ropa, calzado, bazar, hogar, accesorios y tecnología importados de Salta y Bolivia. Envíos a todo el país.",
   keywords: [
-    "decants",
-    "perfumes nicho",
-    "Tom Ford",
-    "Baccarat Rouge",
-    "Maison Francis Kurkdjian",
-    "perfumes Argentina",
-    "decants originales",
+    "tienda Belén",
+    "Catamarca",
+    "importaciones Bolivia",
+    "ropa Salta",
+    "tienda online Argentina",
+    "Víctor Hugo Figueroa",
+    "VHF",
   ],
-  authors: [{ name: "VHF Decants" }],
+  authors: [{ name: "Víctor Hugo Figueroa" }],
   openGraph: {
-    title: "VHF Decants — Atelier de Perfumería de Lujo",
+    title: "VHF — Importaciones de Belén",
     description:
-      "Probá los perfumes más codiciados del mundo desde 5 ml. 100% originales, fraccionados a mano.",
+      "Lo mejor de Salta y Bolivia, seleccionado y traído por Víctor Hugo. Ropa, calzado, bazar, hogar.",
     type: "website",
     locale: "es_AR",
-    siteName: "VHF Decants",
+    siteName: "VHF",
   },
   twitter: {
     card: "summary_large_image",
-    title: "VHF Decants — Atelier de Perfumería de Lujo",
-    description:
-      "Probá los perfumes más codiciados del mundo desde 5 ml. 100% originales.",
+    title: "VHF — Importaciones de Belén",
+    description: "Productos seleccionados de Salta y Bolivia. Envíos a todo el país.",
   },
   icons: { icon: "/favicon.ico" },
   robots: { index: true, follow: true },
@@ -57,7 +56,6 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-ink-950 text-bone antialiased relative overflow-x-hidden">
-        {/* Monograma de fondo, ultra-sutil */}
         <div className="fixed inset-0 z-[-1] flex items-center justify-center pointer-events-none select-none overflow-hidden">
           <span className="font-display italic text-white opacity-[0.015] text-[28vw] leading-none">
             V

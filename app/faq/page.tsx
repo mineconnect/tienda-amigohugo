@@ -1,110 +1,135 @@
+import { createClient } from "@supabase/supabase-js";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { getSettings } from "@/lib/settings";
+import type { Category } from "@/lib/supabase";
 
 export const metadata = {
-  title: "Preguntas frecuentes — VHF Decants",
+  title: "Preguntas frecuentes — VHF Importaciones de Belén",
   description:
-    "Resolvemos todas tus dudas sobre decants, autenticidad, envíos, pagos y devoluciones.",
+    "Resolvemos tus dudas sobre cómo comprar, formas de pago, envíos y devoluciones en VHF.",
 };
+
+export const dynamic = "force-dynamic";
+
+async function getCategories(): Promise<Category[]> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return [];
+  try {
+    const sb = createClient(url, key);
+    const { data } = await sb
+      .from("categories")
+      .select("*")
+      .eq("active", true)
+      .order("sort_order");
+    return (data as Category[]) || [];
+  } catch {
+    return [];
+  }
+}
 
 const SECTIONS = [
   {
-    id: "autenticidad",
-    title: "Autenticidad",
+    id: "comprar",
+    title: "Cómo comprar",
     items: [
       {
-        q: "¿Cómo sé que el perfume es 100% original?",
-        a: "Cada decant se fracciona desde el frasco original adquirido en boutiques oficiales o distribuidores autorizados. Conservamos el frasco original y registramos el número de lote. Si querés, te enviamos por WhatsApp la foto del lote y el comprobante de compra antes del despacho.",
+        q: "¿Cómo hago un pedido?",
+        a: "Es muy fácil: navegá el catálogo, tocá el botón + para agregar productos al carrito, después entrá al carrito y tocá 'Finalizar por WhatsApp'. Se abre WhatsApp con tu pedido ya armado — solo tenés que tocar enviar.",
       },
       {
-        q: "¿Por qué un decant es más barato que un frasco completo?",
-        a: "Porque pagás solo el mililitraje que vas a usar. Un frasco de 100 ml de un perfume nicho puede costar $400.000–$700.000. Un decant de 5 ml del mismo perfume puede costar entre $3.000 y $8.000. Misma fórmula, distinto envase.",
+        q: "¿Necesito crearme una cuenta?",
+        a: "No, no hace falta. Tu carrito se guarda en tu dispositivo y la compra se concreta por WhatsApp.",
       },
       {
-        q: "¿Qué pasa si dudo de la fragancia que recibí?",
-        a: "Si no coincide con el perfume original, te devolvemos el 100% del dinero o lo cambiamos por otro. La originalidad no se discute: si fallamos, asumimos.",
+        q: "¿Puedo pedir algo que no esté en el catálogo?",
+        a: "Sí. Si necesitás algo específico, escribime por WhatsApp y vemos si lo puedo conseguir en el próximo viaje.",
       },
     ],
   },
   {
-    id: "decant",
-    title: "El producto",
+    id: "pagos",
+    title: "Formas de pago",
     items: [
       {
-        q: "¿Qué es exactamente un decant?",
-        a: "Es una porción del perfume original transvasada a un atomizador más pequeño (5, 10 o 30 ml). El líquido es el mismo perfume, mismo lote y misma fórmula que el frasco oficial — solo cambia el envase.",
+        q: "¿Qué medios de pago aceptan?",
+        a: "Transferencia bancaria a CBU, Mercado Pago (link de pago con todas las tarjetas y cuotas según la promo vigente) y efectivo si retirás en Belén.",
       },
       {
-        q: "¿Cuántas aplicaciones tiene un decant de 5 ml?",
-        a: "Aproximadamente 60 a 80 sprays. Si usás 2 sprays por ocasión y te perfumás día por medio, te dura entre 1 y 2 meses.",
+        q: "¿Cuándo se paga?",
+        a: "Después de confirmar el pedido por WhatsApp, te paso los datos para el pago. La mercadería sale una vez acreditado.",
       },
       {
-        q: "¿Los atomizadores son nuevos?",
-        a: "Sí, siempre. Usamos atomizadores de vidrio óptico nuevos, esterilizados, con válvula de presión fina (no son atomizadores de plástico baratos).",
-      },
-      {
-        q: "¿Cuánto dura un decant ya abierto?",
-        a: "Almacenado en lugar fresco y oscuro, conserva sus propiedades 2 a 3 años. Evitá luz directa, baño con humedad y temperaturas extremas.",
+        q: "¿Aceptan cuotas sin interés?",
+        a: "Depende de la promo bancaria del momento. Por Mercado Pago muchas veces salen 3 o 6 cuotas sin interés. Consultame al momento del pedido.",
       },
     ],
   },
   {
     id: "envios",
-    title: "Envíos y pagos",
+    title: "Envíos",
     items: [
       {
+        q: "¿Hacen envíos a todo el país?",
+        a: "Sí, despachamos por correo o encomienda a cualquier ciudad de Argentina con código de seguimiento.",
+      },
+      {
         q: "¿Cuánto tarda el envío?",
-        a: "Despachamos en 24-48 hs hábiles desde la confirmación del pago. Andreani al domicilio o sucursal entrega entre 2 y 5 días hábiles según la zona. Correo Argentino, entre 4 y 8 días.",
+        a: "A capitales de provincia: 3-7 días hábiles. Al interior profundo: 7-12 días hábiles, dependiendo del correo.",
       },
       {
         q: "¿Cuánto cuesta el envío?",
-        a: "Depende del peso y la zona. A CABA y GBA desde $2.500 por Andreani. Al interior, lo cotizamos al momento del pedido. Envío bonificado en compras superiores a $25.000.",
+        a: "Depende del peso y la zona. Se lo paga directo al correo al retirarlo. En compras grandes podemos coordinar envío gratis o con descuento.",
       },
       {
-        q: "¿Qué métodos de pago aceptan?",
-        a: "Transferencia bancaria (recomendado), Mercado Pago (con todas las tarjetas y cuotas según promo vigente) y efectivo en Pago Fácil o Rapipago.",
-      },
-      {
-        q: "¿Hacen envíos al exterior?",
-        a: "Por el momento solo Argentina. Estamos trabajando para habilitar Uruguay, Chile y Paraguay.",
+        q: "¿Puedo retirar en Belén?",
+        a: "Por supuesto. Si vivís en Belén o cerca, coordinamos por WhatsApp para que pases a buscarlo.",
       },
     ],
   },
   {
-    id: "devoluciones",
-    title: "Cambios y devoluciones",
+    id: "productos",
+    title: "Productos y stock",
     items: [
       {
-        q: "¿Puedo devolver un decant si no me gusta?",
-        a: "Por norma de higiene y autenticidad no aceptamos devoluciones por gusto personal una vez abierto. Si el producto está cerrado y sin uso, aceptamos cambios dentro de los 10 días.",
+        q: "¿Las fotos son reales?",
+        a: "Sí, todas las fotos las tomamos nosotros o son del fabricante original. Si querés ver fotos extras o detalles, pedímelos por WhatsApp.",
       },
       {
-        q: "¿Y si el producto llega dañado?",
-        a: "Te lo reponemos sin cargo. Pedimos foto del paquete y del decant al recibirlo para gestionar el reclamo con el correo.",
+        q: "¿Hay stock garantizado?",
+        a: "Trabajamos con stock real cargado en la web. Si algo se vendió antes de que actualice, te aviso al toque por WhatsApp y vemos alternativas.",
+      },
+      {
+        q: "¿Qué pasa si el producto no es lo que esperaba?",
+        a: "Tenés hasta 7 días desde que lo recibís para cambiarlo o devolverlo (siempre que esté sin uso y con etiquetas). Los costos de envío del cambio van por cuenta del comprador.",
       },
     ],
   },
 ];
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const [categories, settings] = await Promise.all([
+    getCategories(),
+    getSettings(),
+  ]);
+
   return (
     <>
-      <Navbar />
+      <Navbar categories={categories} />
       <main className="pt-28 pb-24 px-6 md:px-10 max-w-5xl mx-auto">
-        {/* Hero */}
         <section className="text-center py-16 md:py-24">
           <p className="eyebrow justify-center mb-5">Soporte</p>
           <h1 className="font-display text-5xl md:text-7xl font-medium text-bone leading-[1.05] mb-6 text-balance">
-            Preguntas <span className="italic text-gold-gradient">frecuentes</span>
+            Preguntas{" "}
+            <span className="italic text-gold-gradient">frecuentes</span>
           </h1>
           <p className="text-lg text-bone/70 max-w-2xl mx-auto leading-relaxed">
-            Todo lo que necesitás saber sobre decants, autenticidad, envíos y
-            pagos. ¿Algo no está acá? Escribinos por WhatsApp.
+            Todo lo que necesitás saber antes de comprar. Si algo no está acá, escribime por WhatsApp.
           </p>
         </section>
 
-        {/* Índice rápido */}
         <nav className="flex flex-wrap justify-center gap-3 mb-16 pb-10 border-b border-gold-400/10">
           {SECTIONS.map((s) => (
             <a
@@ -117,13 +142,12 @@ export default function FaqPage() {
           ))}
         </nav>
 
-        {/* Secciones */}
         <div className="space-y-20">
-          {SECTIONS.map((section) => (
+          {SECTIONS.map((section, idx) => (
             <section key={section.id} id={section.id} className="scroll-mt-28">
               <div className="flex items-center gap-4 mb-8">
                 <span className="font-display italic text-4xl text-gold-gradient">
-                  {String(SECTIONS.indexOf(section) + 1).padStart(2, "0")}
+                  {String(idx + 1).padStart(2, "0")}
                 </span>
                 <h2 className="font-display text-3xl md:text-4xl text-bone">
                   {section.title}
@@ -153,19 +177,17 @@ export default function FaqPage() {
           ))}
         </div>
 
-        {/* CTA final */}
         <section className="mt-24 text-center glass-card hairline rounded-3xl p-12">
           <p className="eyebrow justify-center mb-5">¿Seguís con dudas?</p>
           <h3 className="font-display text-3xl md:text-4xl text-bone mb-4">
-            Hablemos directo
+            Escribime directo
           </h3>
           <p className="text-sm text-muted max-w-md mx-auto mb-8">
-            Te respondemos en minutos durante el día. Sin bots, sin formularios
-            eternos.
+            Te respondo yo mismo en minutos durante el día. Sin bots, sin formularios eternos.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <a
-              href="https://wa.me/5493834789035?text=Hola%21%20Tengo%20una%20consulta"
+              href={`https://wa.me/${settings.contact_whatsapp || "5493834789035"}?text=Hola%21%20Tengo%20una%20consulta`}
               target="_blank"
               rel="noopener"
               className="btn-gold"
@@ -181,7 +203,7 @@ export default function FaqPage() {
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer categories={categories} settings={settings} />
     </>
   );
 }

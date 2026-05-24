@@ -2,16 +2,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getCart, CartItem } from "@/lib/cart";
+import type { Category } from "@/lib/supabase";
 
-const NAV_LINKS = [
-  { label: "Catálogo",  href: "/#catalogo" },
-  { label: "Niche",     href: "/?categoria=Niche#catalogo" },
-  { label: "Designer",  href: "/?categoria=Designer#catalogo" },
-  { label: "Árabes",    href: "/?categoria=Árabes#catalogo" },
-  { label: "Editorial", href: "/sobre-nosotros" },
-];
-
-export default function Navbar() {
+export default function Navbar({ categories = [] }: { categories?: Category[] }) {
   const [cartCount, setCartCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -34,6 +27,9 @@ export default function Navbar() {
     };
   }, []);
 
+  // Tomamos las primeras 4 categorías para el menú desktop, el resto va al menú móvil.
+  const desktopCats = categories.slice(0, 4);
+
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-500 ${
@@ -43,36 +39,47 @@ export default function Navbar() {
       }`}
     >
       <div className="flex justify-between items-center px-6 md:px-10 h-20 max-w-[1400px] mx-auto">
-        {/* Logo + monograma */}
         <Link href="/" className="group flex items-center gap-3">
           <span className="font-display italic text-3xl text-gold-gradient leading-none">
             V
           </span>
           <div className="flex flex-col leading-none">
             <span className="font-display text-base font-semibold tracking-wide text-bone">
-              VHF Decants
+              VHF
             </span>
             <span className="text-[9px] uppercase tracking-ultra text-gold-400/80 mt-1">
-              Atelier · Buenos Aires
+              Belén · Catamarca
             </span>
           </div>
         </Link>
 
-        {/* Desktop nav */}
-        <div className="hidden md:flex space-x-9 items-center">
-          {NAV_LINKS.map((item) => (
+        <div className="hidden md:flex space-x-8 items-center">
+          <Link
+            href="/#catalogo"
+            className="relative font-body text-[11px] uppercase tracking-widest text-bone/70 hover:text-gold-400 transition-colors duration-300 py-2 group"
+          >
+            Catálogo
+            <span className="absolute left-0 -bottom-0.5 h-px w-0 bg-gold-400 group-hover:w-full transition-all duration-500" />
+          </Link>
+          {desktopCats.map((cat) => (
             <Link
-              key={item.label}
-              href={item.href}
+              key={cat.id}
+              href={`/?categoria=${cat.slug}#catalogo`}
               className="relative font-body text-[11px] uppercase tracking-widest text-bone/70 hover:text-gold-400 transition-colors duration-300 py-2 group"
             >
-              {item.label}
+              {cat.name}
               <span className="absolute left-0 -bottom-0.5 h-px w-0 bg-gold-400 group-hover:w-full transition-all duration-500" />
             </Link>
           ))}
+          <Link
+            href="/sobre-nosotros"
+            className="relative font-body text-[11px] uppercase tracking-widest text-bone/70 hover:text-gold-400 transition-colors duration-300 py-2 group"
+          >
+            Sobre nosotros
+            <span className="absolute left-0 -bottom-0.5 h-px w-0 bg-gold-400 group-hover:w-full transition-all duration-500" />
+          </Link>
         </div>
 
-        {/* Actions */}
         <div className="flex items-center space-x-5 text-bone/80">
           <a
             href="https://wa.me/5493834789035"
@@ -81,7 +88,7 @@ export default function Navbar() {
             className="hidden md:flex items-center gap-2 text-[11px] uppercase tracking-widest hover:text-gold-400 transition-colors"
           >
             <span className="material-symbols-outlined text-[18px]">chat</span>
-            Asesoría
+            WhatsApp
           </a>
           <Link
             href="/cart"
@@ -109,19 +116,39 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden bg-ink-900/95 backdrop-blur-2xl border-t border-gold-400/10 px-6 py-6 space-y-1 animate-fade-in">
-          {NAV_LINKS.map((item) => (
+          <Link
+            href="/#catalogo"
+            onClick={() => setMenuOpen(false)}
+            className="block font-body uppercase tracking-widest text-xs text-bone/80 hover:text-gold-400 transition-colors py-3 border-b border-gold-400/5"
+          >
+            Catálogo
+          </Link>
+          {categories.map((cat) => (
             <Link
-              key={item.label}
-              href={item.href}
+              key={cat.id}
+              href={`/?categoria=${cat.slug}#catalogo`}
               onClick={() => setMenuOpen(false)}
               className="block font-body uppercase tracking-widest text-xs text-bone/80 hover:text-gold-400 transition-colors py-3 border-b border-gold-400/5"
             >
-              {item.label}
+              {cat.name}
             </Link>
           ))}
+          <Link
+            href="/sobre-nosotros"
+            onClick={() => setMenuOpen(false)}
+            className="block font-body uppercase tracking-widest text-xs text-bone/80 hover:text-gold-400 transition-colors py-3 border-b border-gold-400/5"
+          >
+            Sobre nosotros
+          </Link>
+          <Link
+            href="/faq"
+            onClick={() => setMenuOpen(false)}
+            className="block font-body uppercase tracking-widest text-xs text-bone/80 hover:text-gold-400 transition-colors py-3 border-b border-gold-400/5"
+          >
+            Preguntas
+          </Link>
           <a
             href="https://wa.me/5493834789035"
             target="_blank"
@@ -129,7 +156,7 @@ export default function Navbar() {
             className="flex items-center gap-2 font-body uppercase tracking-widest text-xs text-gold-400 py-3"
           >
             <span className="material-symbols-outlined text-base">chat</span>
-            Asesoría por WhatsApp
+            WhatsApp
           </a>
         </div>
       )}

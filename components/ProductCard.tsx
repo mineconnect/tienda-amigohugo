@@ -15,6 +15,7 @@ export default function ProductCard({ product }: Props) {
   const handleAdd = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!product.in_stock) return;
     addToCart({
       id: product.id,
       name: product.name,
@@ -27,14 +28,13 @@ export default function ProductCard({ product }: Props) {
     setTimeout(() => setAdded(false), 1500);
   };
 
-  const notes = (product.notes || []).slice(0, 3);
+  const categoryName = product.category?.name;
 
   return (
     <Link
       href={`/producto/${product.id}`}
       className="product-card group block glass-card hairline rounded-2xl overflow-hidden"
     >
-      {/* Imagen */}
       <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-b from-ink-700 to-ink-900">
         {product.image_url ? (
           <Image
@@ -48,22 +48,19 @@ export default function ProductCard({ product }: Props) {
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <span className="material-symbols-outlined text-6xl text-gold-400/20">
-              local_florist
+              inventory_2
             </span>
           </div>
         )}
 
-        {/* Gradiente bottom para legibilidad */}
         <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-ink-950/85 via-ink-950/30 to-transparent" />
 
-        {/* Badge categoría / size */}
-        {product.size && (
-          <div className="absolute top-3 left-3 px-2.5 py-1 bg-ink-950/70 backdrop-blur-sm rounded-full text-[9px] font-medium uppercase tracking-widest text-gold-300 border border-gold-400/20">
-            {product.size}
+        {product.featured && (
+          <div className="absolute top-3 left-3 px-2.5 py-1 bg-gold-400/95 backdrop-blur-sm rounded-full text-[9px] font-bold uppercase tracking-widest text-ink-950">
+            ★ Destacado
           </div>
         )}
 
-        {/* Agotado */}
         {!product.in_stock && (
           <div className="absolute inset-0 bg-ink-950/70 backdrop-blur-sm flex items-center justify-center">
             <span className="text-xs uppercase tracking-widest text-bone/80 border border-bone/30 px-4 py-2 rounded-full">
@@ -72,42 +69,43 @@ export default function ProductCard({ product }: Props) {
           </div>
         )}
 
-        {/* Botón Agregar — desktop overlay, mobile siempre visible */}
         <button
           onClick={handleAdd}
           disabled={!product.in_stock}
           className={`absolute bottom-3 right-3 z-10 h-10 w-10 rounded-full flex items-center justify-center
             transition-all duration-500
-            ${added ? "bg-gold-400 text-ink-950 scale-110" : "bg-ink-950/80 backdrop-blur-md text-gold-400 border border-gold-400/40 hover:bg-gold-400 hover:text-ink-950"}
+            ${
+              added
+                ? "bg-gold-400 text-ink-950 scale-110"
+                : "bg-ink-950/80 backdrop-blur-md text-gold-400 border border-gold-400/40 hover:bg-gold-400 hover:text-ink-950"
+            }
             disabled:opacity-30 disabled:cursor-not-allowed`}
           aria-label="Agregar al carrito"
         >
           <span className="material-symbols-outlined text-[18px]">
-            {added ? "check" : "add"}
+            {added ? "check" : "add_shopping_cart"}
           </span>
         </button>
       </div>
 
-      {/* Info */}
-      <div className="p-5 space-y-3">
+      <div className="p-5 space-y-2">
         <div>
           <h3 className="font-display text-lg font-semibold text-bone leading-tight truncate">
             {product.name}
           </h3>
-          {product.category && (
+          {categoryName && (
             <p className="text-[10px] uppercase tracking-widest text-muted mt-0.5">
-              {product.category}
+              {categoryName}
             </p>
           )}
         </div>
 
-        {notes.length > 0 && (
+        {(product.size || product.color) && (
           <div className="flex flex-wrap gap-1.5">
-            {notes.map((n) => (
-              <span key={n} className="note-tag">
-                {n}
-              </span>
-            ))}
+            {product.size && (
+              <span className="note-tag">Talle {product.size}</span>
+            )}
+            {product.color && <span className="note-tag">{product.color}</span>}
           </div>
         )}
 
@@ -116,7 +114,7 @@ export default function ProductCard({ product }: Props) {
             ${product.price.toLocaleString("es-AR")}
           </span>
           <span className="text-[10px] uppercase tracking-widest text-muted">
-            Ver detalle
+            Ver
             <span className="material-symbols-outlined text-[12px] align-middle ml-0.5">
               arrow_forward
             </span>

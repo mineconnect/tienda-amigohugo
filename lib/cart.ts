@@ -8,6 +8,7 @@ export type CartItem = {
 };
 
 export const CART_KEY = "vhf_cart";
+export const WHATSAPP_PHONE = "5493834789035"; // +54 9 3834 78-9035
 
 export function getCart(): CartItem[] {
   if (typeof window === "undefined") return [];
@@ -19,6 +20,7 @@ export function getCart(): CartItem[] {
 }
 
 export function saveCart(items: CartItem[]) {
+  if (typeof window === "undefined") return;
   localStorage.setItem(CART_KEY, JSON.stringify(items));
 }
 
@@ -56,15 +58,31 @@ export function cartTotal(items: CartItem[]) {
   return items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 }
 
-export function buildWhatsAppMessage(items: CartItem[]): string {
-  const phone = "5493834789035";
-  let msg = "¡Hola! Quiero hacer el siguiente pedido:%0A%0A";
+/**
+ * Construye la URL de WhatsApp con el detalle del pedido pre-armado.
+ * El cliente toca "enviar" y Víctor Hugo recibe el pedido completo.
+ */
+export function buildWhatsAppMessage(
+  items: CartItem[],
+  phone: string = WHATSAPP_PHONE
+): string {
+  if (items.length === 0) {
+    return `https://wa.me/${phone}`;
+  }
+
+  const lines: string[] = ["¡Hola Víctor Hugo! Quiero hacer este pedido:", ""];
+
   items.forEach((item) => {
-    msg += `• *${item.name}*`;
-    if (item.size) msg += ` (${item.size})`;
-    msg += ` — $${item.price.toLocaleString("es-AR")} x${item.quantity}%0A`;
+    let line = `• ${item.name}`;
+    if (item.size) line += ` (${item.size})`;
+    line += ` — $${item.price.toLocaleString("es-AR")} x${item.quantity}`;
+    lines.push(line);
   });
+
   const total = cartTotal(items);
-  msg += `%0A*Total: $${total.toLocaleString("es-AR")}*%0A%0AAguardo tu respuesta para coordinar el envío. ¡Gracias!`;
-  return `https://wa.me/${phone}?text=${msg}`;
+  lines.push("", `Total: $${total.toLocaleString("es-AR")}`, "");
+  lines.push("Aguardo tu respuesta para coordinar pago y envío. ¡Gracias!");
+
+  const encoded = encodeURIComponent(lines.join("\n"));
+  return `https://wa.me/${phone}?text=${encoded}`;
 }
