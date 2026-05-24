@@ -35,7 +35,7 @@ export default function Footer({ categories = [], settings = {} }: Props) {
               </div>
             </div>
             <p className="text-sm text-muted leading-relaxed max-w-md">
-              Importaciones de Salta y Bolivia, elegidas por Víctor Hugo Figueroa. Ropa, calzado, bazar, hogar — productos buenos a precio justo.
+              Productos elegidos uno por uno por Víctor Hugo Figueroa. Ropa, calzado, bazar, hogar — buenos, lindos y a precio justo.
             </p>
             <div className="flex gap-3 mt-8">
               <a

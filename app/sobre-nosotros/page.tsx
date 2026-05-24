@@ -8,7 +8,7 @@ import type { Category } from "@/lib/supabase";
 export const metadata = {
   title: "Sobre nosotros — VHF Importaciones de Belén",
   description:
-    "Conocé a Víctor Hugo Figueroa, sus viajes a Salta y Bolivia y cómo elige los productos para su tienda en Belén, Catamarca.",
+    "Conocé a Víctor Hugo Figueroa y cómo elige uno por uno los productos para su tienda en Belén, Catamarca.",
 };
 
 export const dynamic = "force-dynamic";
@@ -30,18 +30,18 @@ async function getCategories(): Promise<Category[]> {
 const PROCESS = [
   {
     step: "01",
-    title: "Viaje y selección",
-    text: "Víctor Hugo viaja a Salta y Bolivia varias veces al año. Recorre ferias, talleres y proveedores locales. Toca, prueba y elige solo lo que valdría la pena para su propia familia.",
+    title: "Selección a mano",
+    text: "Víctor Hugo elige uno por uno los productos. Toca, prueba y trae solo lo que valdría la pena para su propia familia.",
   },
   {
     step: "02",
-    title: "Negociación directa",
-    text: "Compra sin intermediarios. Eso nos permite ofrecerte precios mucho mejores que cualquier cadena, sin sacrificar la calidad del producto.",
+    title: "Trato directo",
+    text: "Compra sin intermediarios. Eso nos permite ofrecerte precios mucho mejores que cualquier cadena, sin sacrificar la calidad.",
   },
   {
     step: "03",
-    title: "Traslado a Belén",
-    text: "Trae la mercadería a Belén (Catamarca) con todos los papeles en regla. Cada lote se revisa antes de cargarlo a la tienda online.",
+    title: "Listo en Belén",
+    text: "Cada lote se revisa antes de cargarlo a la tienda online. Lo que ves en la web es lo que tenemos en stock.",
   },
   {
     step: "04",
@@ -77,17 +77,17 @@ export default async function AboutPage() {
           <div>
             <p className="eyebrow mb-5">Cómo nació la tienda</p>
             <h2 className="font-display text-4xl md:text-5xl text-bone mb-6 leading-tight">
-              De Belén al norte,{" "}
-              <span className="italic text-gold-gradient">y de vuelta.</span>
+              De Belén,{" "}
+              <span className="italic text-gold-gradient">para tu casa.</span>
             </h2>
             <div className="space-y-5 text-bone/75 leading-relaxed">
               <p>
                 Vivo en{" "}
                 <strong className="text-gold-400">Belén, Catamarca</strong>{" "}
-                desde siempre. Hace años que viajo a Salta y a Bolivia por trabajo y por gusto, y siempre volvía con bolsos llenos de cosas que acá no se conseguían — ropa con buenos materiales, artesanías, productos de cocina, electrónica útil.
+                desde siempre. Hace años que vengo seleccionando ropa, artículos para el hogar y cosas útiles que valga la pena tener — y traía cada cosa con bolsos llenos cuando volvía a casa.
               </p>
               <p>
-                La gente del barrio empezó a pedirme cosas: &ldquo;la próxima traeme una campera como esa&rdquo;, &ldquo;si vas a Bolivia, fijate si hay manteles tejidos&rdquo;. Lo que empezó como favores se convirtió en negocio. Y ahora tenés todo el catálogo a un clic.
+                La gente del barrio empezó a pedirme: &ldquo;la próxima traeme una campera como esa&rdquo;, &ldquo;si conseguís manteles tejidos avisame&rdquo;. Lo que empezó como favores se convirtió en negocio. Y ahora tenés todo el catálogo a un clic.
               </p>
               <p>
                 Mi promesa es simple: si yo no me lo pondría, no lo subo a la tienda. Y si tenés alguna duda — talles, telas, colores, lo que sea — me escribís por WhatsApp y te respondo yo mismo.

@@ -11,10 +11,10 @@ import type { Settings } from "@/lib/supabase";
 export async function getSettings(): Promise<Settings> {
   const fallback: Settings = {
     hero_eyebrow: "Importaciones · Belén · Catamarca",
-    hero_title: "Lo mejor de Salta y Bolivia,",
-    hero_title_italic: "a tu alcance.",
+    hero_title: "Lo bueno se elige",
+    hero_title_italic: "con las manos.",
     hero_subtitle:
-      "Víctor Hugo Figueroa viaja, selecciona y trae los mejores productos para vos.",
+      "Víctor Hugo Figueroa selecciona uno por uno los productos que vas a llevar a tu casa. Calidad real, sin intermediarios.",
     hero_cta_primary: "Ver catálogo",
     hero_cta_secondary: "Hablar por WhatsApp",
     metric_1_value: "+200",
@@ -35,7 +35,7 @@ export async function getSettings(): Promise<Settings> {
     valueprop_4_desc: "Te respondemos en minutos.",
     about_title: "Conocé a Víctor Hugo",
     about_text:
-      "Soy Víctor Hugo Figueroa, de Belén (Catamarca). Recorro el norte argentino y Bolivia para traerte productos buenos, lindos y a precio justo.",
+      "Soy Víctor Hugo Figueroa, de Belén (Catamarca). Selecciono uno por uno los productos que llevás a tu casa — buenos, lindos y a precio justo.",
     contact_whatsapp: "5493834789035",
     contact_whatsapp_display: "+54 9 3834 78-9035",
     contact_city: "Belén, Catamarca",

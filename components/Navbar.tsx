@@ -38,16 +38,16 @@ export default function Navbar({ categories = [] }: { categories?: Category[] })
           : "bg-transparent"
       }`}
     >
-      <div className="flex justify-between items-center px-6 md:px-10 h-20 max-w-[1400px] mx-auto">
-        <Link href="/" className="group flex items-center gap-3">
-          <span className="font-display italic text-3xl text-gold-gradient leading-none">
+      <div className="flex justify-between items-center px-4 sm:px-6 md:px-10 h-16 sm:h-20 max-w-[1400px] mx-auto">
+        <Link href="/" className="group flex items-center gap-2 sm:gap-3">
+          <span className="font-display italic text-2xl sm:text-3xl text-gold-gradient leading-none">
             V
           </span>
           <div className="flex flex-col leading-none">
-            <span className="font-display text-base font-semibold tracking-wide text-bone">
+            <span className="font-display text-sm sm:text-base font-semibold tracking-wide text-bone">
               VHF
             </span>
-            <span className="text-[9px] uppercase tracking-ultra text-gold-400/80 mt-1">
+            <span className="hidden sm:block text-[9px] uppercase tracking-ultra text-gold-400/80 mt-1">
               Belén · Catamarca
             </span>
           </div>
@@ -80,32 +80,33 @@ export default function Navbar({ categories = [] }: { categories?: Category[] })
           </Link>
         </div>
 
-        <div className="flex items-center space-x-5 text-bone/80">
+        <div className="flex items-center gap-1 sm:gap-3 md:gap-5 text-bone/80">
           <a
             href="https://wa.me/5493834789035"
             target="_blank"
             rel="noopener"
             className="hidden md:flex items-center gap-2 text-[11px] uppercase tracking-widest hover:text-gold-400 transition-colors"
+            aria-label="WhatsApp"
           >
             <span className="material-symbols-outlined text-[18px]">chat</span>
             WhatsApp
           </a>
           <Link
             href="/cart"
-            className="relative group p-2 hover:text-gold-400 transition-colors"
+            className="relative group p-2 hover:text-gold-400 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
             aria-label="Carrito"
           >
             <span className="material-symbols-outlined text-[22px]">
               shopping_bag
             </span>
             {cartCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-gold-400 text-ink-950 text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center animate-fade-in">
+              <span className="absolute top-1 right-1 bg-gold-400 text-ink-950 text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center animate-fade-in">
                 {cartCount}
               </span>
             )}
           </Link>
           <button
-            className="md:hidden hover:text-gold-400 p-2"
+            className="md:hidden hover:text-gold-400 p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-label="Menú"
           >

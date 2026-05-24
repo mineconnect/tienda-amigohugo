@@ -99,12 +99,12 @@ export default async function HomePage({
             <div className="absolute inset-y-0 left-1/2 w-px bg-gradient-to-b from-transparent via-gold-400/15 to-transparent" />
           </div>
 
-          <div className="relative z-10 max-w-5xl mx-auto text-center pt-20">
-            <p className="eyebrow justify-center mb-8 animate-fade-in">
+          <div className="relative z-10 max-w-5xl mx-auto text-center pt-16 sm:pt-20">
+            <p className="eyebrow justify-center mb-6 sm:mb-8 animate-fade-in">
               {settings.hero_eyebrow}
             </p>
 
-            <h1 className="font-display text-[clamp(2.8rem,8vw,6.5rem)] font-medium leading-[1.05] text-balance text-bone mb-8 animate-fade-up">
+            <h1 className="font-display text-[clamp(2.4rem,9vw,6.5rem)] font-medium leading-[1.05] text-balance text-bone mb-6 sm:mb-8 animate-fade-up">
               {settings.hero_title}
               <br />
               <span className="italic text-gold-gradient font-normal">
@@ -113,14 +113,14 @@ export default async function HomePage({
             </h1>
 
             <p
-              className="max-w-2xl mx-auto text-base md:text-lg text-bone/70 leading-relaxed mb-12 animate-fade-up"
+              className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-bone/70 leading-relaxed mb-8 sm:mb-12 px-2 animate-fade-up"
               style={{ animationDelay: "150ms" }}
             >
               {settings.hero_subtitle}
             </p>
 
             <div
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-up"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center animate-fade-up max-w-md sm:max-w-none mx-auto"
               style={{ animationDelay: "300ms" }}
             >
               <Link href="#catalogo" className="btn-gold">
@@ -143,7 +143,7 @@ export default async function HomePage({
             </div>
 
             <div
-              className="grid grid-cols-3 gap-4 max-w-2xl mx-auto mt-20 pt-10 border-t border-gold-400/10 animate-fade-up"
+              className="grid grid-cols-3 gap-3 sm:gap-4 max-w-2xl mx-auto mt-14 sm:mt-20 pt-8 sm:pt-10 border-t border-gold-400/10 animate-fade-up"
               style={{ animationDelay: "450ms" }}
             >
               {[
@@ -152,10 +152,10 @@ export default async function HomePage({
                 { num: settings.metric_3_value, lbl: settings.metric_3_label },
               ].map((m) => (
                 <div key={m.lbl} className="text-center">
-                  <div className="font-display text-3xl md:text-4xl text-gold-gradient">
+                  <div className="font-display text-2xl sm:text-3xl md:text-4xl text-gold-gradient">
                     {m.num}
                   </div>
-                  <div className="text-[10px] uppercase tracking-widest text-muted mt-2">
+                  <div className="text-[9px] sm:text-[10px] uppercase tracking-widest text-muted mt-1.5 sm:mt-2 leading-tight">
                     {m.lbl}
                   </div>
                 </div>
@@ -198,12 +198,12 @@ export default async function HomePage({
         {/* CATÁLOGO */}
         <section
           id="catalogo"
-          className="max-w-[1400px] mx-auto px-6 md:px-10 py-24"
+          className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 py-16 sm:py-24"
         >
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-14 gap-4">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-10 sm:mb-14 gap-4">
             <div>
-              <p className="eyebrow mb-4">Catálogo</p>
-              <h2 className="font-display text-4xl md:text-5xl font-medium text-bone leading-tight">
+              <p className="eyebrow mb-3 sm:mb-4">Catálogo</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-medium text-bone leading-tight">
                 {selectedCategory ? (
                   <span className="italic text-gold-gradient">
                     {selectedCategory.name}
@@ -259,32 +259,32 @@ export default async function HomePage({
 
         {/* CATEGORÍAS */}
         {!selectedCategory && categories.length > 0 && (
-          <section className="max-w-[1400px] mx-auto px-6 md:px-10 pb-24">
-            <div className="text-center mb-14">
-              <p className="eyebrow justify-center mb-4">Categorías</p>
-              <h2 className="font-display text-4xl md:text-5xl font-medium text-bone">
+          <section className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 pb-16 sm:pb-24">
+            <div className="text-center mb-10 sm:mb-14">
+              <p className="eyebrow justify-center mb-3 sm:mb-4">Categorías</p>
+              <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-medium text-bone">
                 Explorá{" "}
                 <span className="italic text-gold-gradient">por categoría</span>
               </h2>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
               {categories.map((cat) => (
                 <Link
                   href={`/?categoria=${cat.slug}#catalogo`}
                   key={cat.id}
-                  className="group relative h-[260px] rounded-3xl overflow-hidden border border-gold-400/10 cursor-pointer block hairline bg-gradient-to-br from-ink-700 to-ink-900"
+                  className="group relative h-[180px] sm:h-[220px] md:h-[260px] rounded-2xl sm:rounded-3xl overflow-hidden border border-gold-400/10 cursor-pointer block hairline bg-gradient-to-br from-ink-700 to-ink-900 active:scale-[0.98] transition-transform"
                 >
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(201,169,97,0.15),_transparent_70%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <div className="relative h-full z-10 flex flex-col items-center justify-center p-8 text-center">
-                    <span className="material-symbols-outlined text-5xl text-gold-400 mb-4 group-hover:scale-110 transition-transform duration-500">
+                  <div className="relative h-full z-10 flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 text-center">
+                    <span className="material-symbols-outlined text-4xl sm:text-5xl text-gold-400 mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-500">
                       {cat.icon || "category"}
                     </span>
-                    <h3 className="font-display text-2xl font-semibold text-bone mb-2 group-hover:text-gold-400 transition-colors duration-500">
+                    <h3 className="font-display text-lg sm:text-xl md:text-2xl font-semibold text-bone mb-1 sm:mb-2 group-hover:text-gold-400 transition-colors duration-500">
                       {cat.name}
                     </h3>
                     {cat.description && (
-                      <p className="text-[11px] text-muted leading-relaxed line-clamp-2">
+                      <p className="hidden sm:block text-[11px] text-muted leading-relaxed line-clamp-2">
                         {cat.description}
                       </p>
                     )}
@@ -296,11 +296,11 @@ export default async function HomePage({
         )}
 
         {/* SOBRE VÍCTOR HUGO */}
-        <section className="relative py-32 overflow-hidden">
+        <section className="relative py-20 sm:py-32 overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(201,169,97,0.06),_transparent_70%)]" />
-          <div className="relative max-w-4xl mx-auto px-6 text-center">
-            <p className="eyebrow justify-center mb-6">{settings.about_title}</p>
-            <p className="font-display italic text-2xl md:text-4xl leading-snug text-bone/90 text-balance mb-10">
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
+            <p className="eyebrow justify-center mb-4 sm:mb-6">{settings.about_title}</p>
+            <p className="font-display italic text-xl sm:text-2xl md:text-4xl leading-snug text-bone/90 text-balance mb-8 sm:mb-10">
               &ldquo;{settings.about_text}&rdquo;
             </p>
             <div className="divider-gold max-w-xs mx-auto mb-8">
@@ -321,11 +321,11 @@ export default async function HomePage({
         </section>
 
         {/* CTA WHATSAPP */}
-        <section className="max-w-[1400px] mx-auto px-6 md:px-10 pb-24">
-          <div className="glass-card hairline rounded-3xl p-10 md:p-16 grid md:grid-cols-2 gap-10 items-center">
+        <section className="max-w-[1400px] mx-auto px-4 sm:px-6 md:px-10 pb-16 sm:pb-24">
+          <div className="glass-card hairline rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-16 grid md:grid-cols-2 gap-8 md:gap-10 items-center">
             <div>
-              <p className="eyebrow mb-4">¿Dudas?</p>
-              <h3 className="font-display text-3xl md:text-4xl text-bone mb-4">
+              <p className="eyebrow mb-3 sm:mb-4">¿Dudas?</p>
+              <h3 className="font-display text-2xl sm:text-3xl md:text-4xl text-bone mb-3 sm:mb-4">
                 Te asesoramos antes de comprar
               </h3>
               <p className="text-sm text-muted leading-relaxed mb-8">

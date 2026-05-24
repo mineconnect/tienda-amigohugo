@@ -2,15 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VHF — Importaciones de Belén · Lo mejor de Salta y Bolivia",
+  title: "VHF — Importaciones de Belén · Productos seleccionados a mano",
   description:
-    "Tienda de Víctor Hugo Figueroa. Ropa, calzado, bazar, hogar, accesorios y tecnología importados de Salta y Bolivia. Envíos a todo el país.",
+    "Tienda de Víctor Hugo Figueroa. Ropa, calzado, bazar, hogar, accesorios y tecnología seleccionados a mano. Envíos a todo el país.",
   keywords: [
     "tienda Belén",
     "Catamarca",
-    "importaciones Bolivia",
-    "ropa Salta",
     "tienda online Argentina",
+    "ropa importada",
     "Víctor Hugo Figueroa",
     "VHF",
   ],
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "VHF — Importaciones de Belén",
     description:
-      "Lo mejor de Salta y Bolivia, seleccionado y traído por Víctor Hugo. Ropa, calzado, bazar, hogar.",
+      "Productos seleccionados a mano por Víctor Hugo. Ropa, calzado, bazar, hogar.",
     type: "website",
     locale: "es_AR",
     siteName: "VHF",
@@ -26,7 +25,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "VHF — Importaciones de Belén",
-    description: "Productos seleccionados de Salta y Bolivia. Envíos a todo el país.",
+    description: "Productos seleccionados a mano. Envíos a todo el país.",
   },
   icons: { icon: "/favicon.ico" },
   robots: { index: true, follow: true },

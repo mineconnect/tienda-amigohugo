@@ -1,6 +1,6 @@
 # VHF — Importaciones de Belén
 
-Tienda online de **Víctor Hugo Figueroa** (Belén, Catamarca) — productos importados de Salta y Bolivia. Checkout 100% por WhatsApp; sin pasarela de pago en el sitio.
+Tienda online de **Víctor Hugo Figueroa** (Belén, Catamarca) — productos seleccionados personalmente. Checkout 100% por WhatsApp; sin pasarela de pago en el sitio.
 
 ## Stack
 
