@@ -80,10 +80,12 @@ jobs:
           }
 
           echo "🔐 Seteando env vars en Vercel..."
-          set_env "SUPABASE_SERVICE_ROLE_KEY" "$SUPABASE_SERVICE_KEY"
-          set_env "ADMIN_EMAIL"               "$ADMIN_EMAIL_VAL"
-          set_env "ADMIN_PASSWORD"            "$ADMIN_PASSWORD_VAL"
-          set_env "ADMIN_JWT_SECRET"          "$ADMIN_JWT_SECRET_VAL"
+          set_env "NEXT_PUBLIC_SUPABASE_URL"      "$SUPABASE_URL"
+          set_env "NEXT_PUBLIC_SUPABASE_ANON_KEY" "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6dmZ5ZGtxcGtjcWZudXV5YWd0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MDYxNTUsImV4cCI6MjA5NDA4MjE1NX0.CtQOoeDi1sUdg9mOGyCLcXhQMZVHsBJJJdb2P6jPmX0"
+          set_env "SUPABASE_SERVICE_ROLE_KEY"     "$SUPABASE_SERVICE_KEY"
+          set_env "ADMIN_EMAIL"                   "$ADMIN_EMAIL_VAL"
+          set_env "ADMIN_PASSWORD"                "$ADMIN_PASSWORD_VAL"
+          set_env "ADMIN_JWT_SECRET"              "$ADMIN_JWT_SECRET_VAL"
           echo "✅ Env vars OK"
 
       - name: Install Vercel CLI
