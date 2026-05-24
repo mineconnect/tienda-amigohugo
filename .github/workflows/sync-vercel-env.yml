@@ -1,8 +1,5 @@
 name: Sync Vercel env vars & deploy
 
-# Corre cuando:
-#  - se mergea algo a main (todas las veces, idempotente)
-#  - se dispara manualmente desde la pestaña Actions
 on:
   push:
     branches: [main]
@@ -20,10 +17,18 @@ jobs:
       ADMIN_PASSWORD_VAL:    T8hiJ0AgI4uWuMzLxgqk
       ADMIN_JWT_SECRET_VAL:  "cQRCTXimp63NJaRGVyIcE1crFzk3i3NjYCtJba/lopD3J0LceISPNdx/MzU+0hft"
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
       - name: Fetch VERCEL_TOKEN
+        id: token
         run: |
           set -euo pipefail
-          # Preferir GitHub Secret si está presente; si no, leer de Supabase
           TKN="${{ secrets.VERCEL_TOKEN }}"
           if [ -z "$TKN" ]; then
             echo "Secret no presente, leyendo de Supabase..."
@@ -34,7 +39,7 @@ jobs:
             TKN=$(echo "$RESP" | jq -r '.[0].value // ""')
           fi
           if [ -z "$TKN" ]; then
-            echo "::error::No se encontró VERCEL_TOKEN ni en GitHub Secret ni en Supabase."
+            echo "::error::No se encontró VERCEL_TOKEN."
             exit 1
           fi
           echo "::add-mask::$TKN"
@@ -80,48 +85,25 @@ jobs:
           set_env "ADMIN_JWT_SECRET"          "$ADMIN_JWT_SECRET_VAL"
           echo "✅ Env vars OK"
 
-      - name: Trigger production redeploy
-        env:
-          COMMIT_SHA: ${{ github.sha }}
-          COMMIT_MSG: ${{ github.event.head_commit.message || 'workflow dispatch' }}
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel project info
+        run: |
+          vercel pull \
+            --yes \
+            --environment=production \
+            --token "$VTOKEN" \
+            --scope "$TEAM_ID"
+
+      - name: Build project for production
+        run: |
+          vercel build --prod --token "$VTOKEN"
+
+      - name: Deploy prebuilt output to Vercel production
         run: |
           set -euo pipefail
-          API="https://api.vercel.com"
-
-          echo "🚀 Disparando deploy del commit $COMMIT_SHA..."
-
-          BODY=$(jq -n \
-            --arg name "vhfdecants" \
-            --arg sha "$COMMIT_SHA" \
-            --arg msg "$COMMIT_MSG" \
-            '{
-              name: $name,
-              target: "production",
-              gitSource: {
-                type: "github",
-                repoId: 1135565950,
-                ref: "main",
-                sha: $sha
-              },
-              meta: {
-                githubCommitMessage: $msg,
-                action: "synced-by-actions"
-              }
-            }')
-
-          HTTP=$(curl -s -o /tmp/dr -w "%{http_code}" -X POST \
-            -H "Authorization: Bearer $VTOKEN" \
-            -H "Content-Type: application/json" \
-            -d "$BODY" \
-            "$API/v13/deployments?teamId=$TEAM_ID&forceNew=1&skipAutoDetectionConfirmation=1")
-
-          if [ "$HTTP" -ge 200 ] && [ "$HTTP" -lt 300 ]; then
-            URL=$(jq -r '.url' /tmp/dr)
-            echo "✅ Deploy disparado: https://$URL"
-            echo "   Producción: https://vhfdecants.vercel.app/"
-            echo "   Inspector: https://vercel.com/facundos-projects-c06acd1c/vhfdecants"
-          else
-            echo "❌ Deploy falló (HTTP $HTTP)"
-            cat /tmp/dr
-            exit 1
-          fi
+          DEPLOY_URL=$(vercel deploy --prebuilt --prod --token "$VTOKEN" --scope "$TEAM_ID" 2>&1 | tee /tmp/dep.log | tail -1)
+          echo "Deploy URL: $DEPLOY_URL"
+          echo "Inspector: https://vercel.com/facundos-projects-c06acd1c/vhfdecants"
+          echo "Producción: https://vhfdecants.vercel.app/"
