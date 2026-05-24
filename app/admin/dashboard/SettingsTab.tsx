@@ -11,9 +11,9 @@ const FIELD_GROUPS: { title: string; icon: string; fields: { key: string; label:
     icon: "view_carousel",
     fields: [
       { key: "hero_eyebrow",      label: "Texto chiquito sobre el título",     placeholder: "Importaciones · Belén · Catamarca" },
-      { key: "hero_title",        label: "Título principal — parte 1",         placeholder: "Lo mejor de Salta y Bolivia," },
-      { key: "hero_title_italic", label: "Título principal — parte 2 (cursiva, en dorado)", placeholder: "a tu alcance." },
-      { key: "hero_subtitle",     label: "Subtítulo (texto explicativo)",      multiline: true, placeholder: "Víctor Hugo viaja, selecciona y trae..." },
+      { key: "hero_title",        label: "Título principal — parte 1",         placeholder: "Lo bueno se elige" },
+      { key: "hero_title_italic", label: "Título principal — parte 2 (cursiva, en dorado)", placeholder: "con las manos." },
+      { key: "hero_subtitle",     label: "Subtítulo (texto explicativo)",      multiline: true, placeholder: "Víctor Hugo selecciona uno por uno..." },
       { key: "hero_cta_primary",  label: "Botón principal",                    placeholder: "Ver catálogo" },
       { key: "hero_cta_secondary",label: "Botón secundario",                   placeholder: "Hablar por WhatsApp" },
     ],

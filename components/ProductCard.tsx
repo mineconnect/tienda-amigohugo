@@ -72,29 +72,29 @@ export default function ProductCard({ product }: Props) {
         <button
           onClick={handleAdd}
           disabled={!product.in_stock}
-          className={`absolute bottom-3 right-3 z-10 h-10 w-10 rounded-full flex items-center justify-center
-            transition-all duration-500
+          className={`absolute bottom-3 right-3 z-10 h-11 w-11 sm:h-10 sm:w-10 rounded-full flex items-center justify-center
+            transition-all duration-500 shadow-lg
             ${
               added
                 ? "bg-gold-400 text-ink-950 scale-110"
-                : "bg-ink-950/80 backdrop-blur-md text-gold-400 border border-gold-400/40 hover:bg-gold-400 hover:text-ink-950"
+                : "bg-ink-950/85 backdrop-blur-md text-gold-400 border border-gold-400/40 hover:bg-gold-400 hover:text-ink-950"
             }
             disabled:opacity-30 disabled:cursor-not-allowed`}
           aria-label="Agregar al carrito"
         >
-          <span className="material-symbols-outlined text-[18px]">
+          <span className="material-symbols-outlined text-[20px] sm:text-[18px]">
             {added ? "check" : "add_shopping_cart"}
           </span>
         </button>
       </div>
 
-      <div className="p-5 space-y-2">
+      <div className="p-4 sm:p-5 space-y-2">
         <div>
-          <h3 className="font-display text-lg font-semibold text-bone leading-tight truncate">
+          <h3 className="font-display text-base sm:text-lg font-semibold text-bone leading-tight line-clamp-2 min-h-[2.5rem] sm:min-h-[2.75rem]">
             {product.name}
           </h3>
           {categoryName && (
-            <p className="text-[10px] uppercase tracking-widest text-muted mt-0.5">
+            <p className="text-[10px] uppercase tracking-widest text-muted mt-1">
               {categoryName}
             </p>
           )}
@@ -110,12 +110,12 @@ export default function ProductCard({ product }: Props) {
         )}
 
         <div className="flex items-end justify-between pt-2 border-t border-gold-400/10">
-          <span className="font-display text-2xl font-semibold text-gold-gradient">
+          <span className="font-display text-xl sm:text-2xl font-semibold text-gold-gradient">
             ${product.price.toLocaleString("es-AR")}
           </span>
-          <span className="text-[10px] uppercase tracking-widest text-muted">
+          <span className="hidden sm:inline-flex items-center text-[10px] uppercase tracking-widest text-muted">
             Ver
-            <span className="material-symbols-outlined text-[12px] align-middle ml-0.5">
+            <span className="material-symbols-outlined text-[12px] ml-0.5">
               arrow_forward
             </span>
           </span>

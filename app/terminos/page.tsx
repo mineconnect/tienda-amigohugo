@@ -56,7 +56,7 @@ export default async function TermsPage() {
             <p>
               VHF es un emprendimiento personal de{" "}
               <strong className="text-gold-400">Víctor Hugo Figueroa</strong>{" "}
-              con sede en Belén (Catamarca, Argentina). Comercializa productos importados desde Salta y Bolivia (ropa, calzado, bazar, hogar, accesorios, tecnología, entre otros).
+              con sede en Belén (Catamarca, Argentina). Comercializa productos seleccionados personalmente (ropa, calzado, bazar, hogar, accesorios, tecnología, entre otros).
             </p>
           </Block>
 
