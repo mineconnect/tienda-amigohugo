@@ -2,10 +2,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getCart, CartItem } from "@/lib/cart";
+import type { Category } from "@/lib/supabase";
 
-export default function Navbar() {
+export default function Navbar({ categories = [] }: { categories?: Category[] }) {
   const [cartCount, setCartCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const update = () => {
@@ -14,78 +16,148 @@ export default function Navbar() {
     };
     update();
     window.addEventListener("cart-updated", update);
-    return () => window.removeEventListener("cart-updated", update);
+
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("cart-updated", update);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
+  // Tomamos las primeras 4 categorías para el menú desktop, el resto va al menú móvil.
+  const desktopCats = categories.slice(0, 4);
+
   return (
-    <nav className="fixed top-0 w-full z-50 bg-background/60 backdrop-blur-xl border-b border-outline-variant/10">
-      <div className="flex justify-between items-center px-6 md:px-8 h-20 max-w-7xl mx-auto">
-        {/* Logo */}
-        <Link href="/" className="font-headline text-lg font-bold tracking-widest text-white">
-          VHF_Decants
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+        scrolled
+          ? "bg-ink-950/80 backdrop-blur-2xl border-b border-gold-400/10"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="flex justify-between items-center px-6 md:px-10 h-20 max-w-[1400px] mx-auto">
+        <Link href="/" className="group flex items-center gap-3">
+          <span className="font-display italic text-3xl text-gold-gradient leading-none">
+            V
+          </span>
+          <div className="flex flex-col leading-none">
+            <span className="font-display text-base font-semibold tracking-wide text-bone">
+              VHF
+            </span>
+            <span className="text-[9px] uppercase tracking-ultra text-gold-400/80 mt-1">
+              Belén · Catamarca
+            </span>
+          </div>
         </Link>
 
-        {/* Desktop nav */}
         <div className="hidden md:flex space-x-8 items-center">
-            {[
-              { label: "Tendencias", href: "/" },
-              { label: "Electrónica", href: "/?categoria=ELECTRÓNICA#catalogo" },
-              { label: "Moda", href: "/?categoria=MODA#catalogo" },
-              { label: "Hogar", href: "/?categoria=HOGAR Y ESTILO#catalogo" },
-              { label: "Gadgets", href: "/?categoria=GADGETS#catalogo" }
-            ].map((item) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="font-body text-[10px] uppercase tracking-widest text-gray-400 hover:text-white transition-colors duration-300"
-              >
-                {item.label}
-              </Link>
-            ))}
+          <Link
+            href="/#catalogo"
+            className="relative font-body text-[11px] uppercase tracking-widest text-bone/70 hover:text-gold-400 transition-colors duration-300 py-2 group"
+          >
+            Catálogo
+            <span className="absolute left-0 -bottom-0.5 h-px w-0 bg-gold-400 group-hover:w-full transition-all duration-500" />
+          </Link>
+          {desktopCats.map((cat) => (
+            <Link
+              key={cat.id}
+              href={`/?categoria=${cat.slug}#catalogo`}
+              className="relative font-body text-[11px] uppercase tracking-widest text-bone/70 hover:text-gold-400 transition-colors duration-300 py-2 group"
+            >
+              {cat.name}
+              <span className="absolute left-0 -bottom-0.5 h-px w-0 bg-gold-400 group-hover:w-full transition-all duration-500" />
+            </Link>
+          ))}
+          <Link
+            href="/sobre-nosotros"
+            className="relative font-body text-[11px] uppercase tracking-widest text-bone/70 hover:text-gold-400 transition-colors duration-300 py-2 group"
+          >
+            Sobre nosotros
+            <span className="absolute left-0 -bottom-0.5 h-px w-0 bg-gold-400 group-hover:w-full transition-all duration-500" />
+          </Link>
         </div>
 
-        {/* Actions */}
-        <div className="flex items-center space-x-5 text-gray-300">
-          <a href="#catalogo" className="hover:scale-110 hover:text-white transition-all hidden md:block">
-            <span className="material-symbols-outlined text-[20px]">search</span>
+        <div className="flex items-center space-x-5 text-bone/80">
+          <a
+            href="https://wa.me/5493834789035"
+            target="_blank"
+            rel="noopener"
+            className="hidden md:flex items-center gap-2 text-[11px] uppercase tracking-widest hover:text-gold-400 transition-colors"
+          >
+            <span className="material-symbols-outlined text-[18px]">chat</span>
+            WhatsApp
           </a>
-          <Link href="/cart" className="hover:scale-110 hover:text-white transition-all relative">
-            <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
+          <Link
+            href="/cart"
+            className="relative group p-2 hover:text-gold-400 transition-colors"
+            aria-label="Carrito"
+          >
+            <span className="material-symbols-outlined text-[22px]">
+              shopping_bag
+            </span>
             {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-white text-black text-[9px] font-bold h-3.5 w-3.5 rounded-full flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-0.5 bg-gold-400 text-ink-950 text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center animate-fade-in">
                 {cartCount}
               </span>
             )}
           </Link>
-          {/* Hamburger */}
           <button
-            className="md:hidden hover:text-white"
+            className="md:hidden hover:text-gold-400 p-2"
             onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menú"
           >
-            <span className="material-symbols-outlined">{menuOpen ? "close" : "menu"}</span>
+            <span className="material-symbols-outlined">
+              {menuOpen ? "close" : "menu"}
+            </span>
           </button>
         </div>
       </div>
 
-      {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden bg-surface-container border-t border-outline-variant/20 px-6 py-4 space-y-3">
-          {[
-            { label: "Tendencias", href: "/" },
-            { label: "Electrónica", href: "/?categoria=ELECTRÓNICA#catalogo" },
-            { label: "Moda", href: "/?categoria=MODA#catalogo" },
-            { label: "Hogar", href: "/?categoria=HOGAR Y ESTILO#catalogo" },
-            { label: "Gadgets", href: "/?categoria=GADGETS#catalogo" }
-          ].map((item) => (
+        <div className="md:hidden bg-ink-900/95 backdrop-blur-2xl border-t border-gold-400/10 px-6 py-6 space-y-1 animate-fade-in">
+          <Link
+            href="/#catalogo"
+            onClick={() => setMenuOpen(false)}
+            className="block font-body uppercase tracking-widest text-xs text-bone/80 hover:text-gold-400 transition-colors py-3 border-b border-gold-400/5"
+          >
+            Catálogo
+          </Link>
+          {categories.map((cat) => (
             <Link
-              key={item.label}
-              href={item.href}
+              key={cat.id}
+              href={`/?categoria=${cat.slug}#catalogo`}
               onClick={() => setMenuOpen(false)}
-              className="block font-headline uppercase tracking-widest text-xs text-on-surface-variant hover:text-primary transition-colors py-2"
+              className="block font-body uppercase tracking-widest text-xs text-bone/80 hover:text-gold-400 transition-colors py-3 border-b border-gold-400/5"
             >
-              {item.label}
+              {cat.name}
             </Link>
           ))}
+          <Link
+            href="/sobre-nosotros"
+            onClick={() => setMenuOpen(false)}
+            className="block font-body uppercase tracking-widest text-xs text-bone/80 hover:text-gold-400 transition-colors py-3 border-b border-gold-400/5"
+          >
+            Sobre nosotros
+          </Link>
+          <Link
+            href="/faq"
+            onClick={() => setMenuOpen(false)}
+            className="block font-body uppercase tracking-widest text-xs text-bone/80 hover:text-gold-400 transition-colors py-3 border-b border-gold-400/5"
+          >
+            Preguntas
+          </Link>
+          <a
+            href="https://wa.me/5493834789035"
+            target="_blank"
+            rel="noopener"
+            className="flex items-center gap-2 font-body uppercase tracking-widest text-xs text-gold-400 py-3"
+          >
+            <span className="material-symbols-outlined text-base">chat</span>
+            WhatsApp
+          </a>
         </div>
       )}
     </nav>

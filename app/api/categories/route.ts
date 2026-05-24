@@ -11,9 +11,9 @@ export async function GET() {
   try {
     const sb = createClient(url, key);
     const { data, error } = await sb
-      .from("products")
-      .select("*, category:categories(id, slug, name)")
-      .eq("in_stock", true)
+      .from("categories")
+      .select("id, slug, name, icon, description, sort_order")
+      .eq("active", true)
       .order("sort_order", { ascending: true });
     if (error) return NextResponse.json([]);
     return NextResponse.json(data || []);

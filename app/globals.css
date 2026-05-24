@@ -2,45 +2,210 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+@layer base {
+  :root {
+    --gold:   #c9a961;
+    --gold-d: #8f6f31;
+    --ink:    #070707;
+    --bone:   #e8e0cf;
+  }
 
-html {
-  scroll-behavior: smooth;
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--ink);
+    color: var(--bone);
+    font-family: "Inter Tight", "Inter", sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    overflow-x: hidden;
+  }
+
+  /* Sutil textura de grano sobre fondo (lujo editorial) */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(201,169,97,0.07), transparent 60%),
+      radial-gradient(ellipse 60% 40% at 50% 120%, rgba(183,148,246,0.05), transparent 60%);
+    mix-blend-mode: screen;
+  }
+
+  ::selection {
+    background: rgba(201,169,97,0.35);
+    color: #fff;
+  }
 }
 
-body {
-  background-color: #0e0e0e;
-  color: #ffffff;
-  font-family: 'Inter', sans-serif;
+@layer components {
+  /* Tipografía editorial */
+  .font-display {
+    font-family: "Cormorant Garamond", "Noto Serif", serif;
+    font-feature-settings: "liga", "dlig", "swsh";
+    letter-spacing: -0.01em;
+  }
+
+  /* Glass-card refinado */
+  .glass-card {
+    background: linear-gradient(180deg, rgba(28,28,28,0.6), rgba(10,10,10,0.4));
+    backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid rgba(201,169,97,0.10);
+  }
+
+  /* Borde dorado hairline */
+  .hairline {
+    position: relative;
+  }
+  .hairline::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border: 1px solid rgba(201,169,97,0.18);
+    border-radius: inherit;
+  }
+
+  /* Texto dorado degradado */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #f4e9c4 0%, #c9a961 45%, #8f6f31 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Botón principal — pill dorado */
+  .btn-gold {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 2.5rem;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: #0a0a0a;
+    background: linear-gradient(135deg, #d9bb6a, #c9a961 50%, #b69044);
+    border-radius: 999px;
+    transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s ease;
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.20) inset,
+      0 -1px 0 rgba(0,0,0,0.30) inset,
+      0 18px 30px -12px rgba(201,169,97,0.45);
+  }
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.25) inset,
+      0 -1px 0 rgba(0,0,0,0.30) inset,
+      0 26px 40px -10px rgba(201,169,97,0.55);
+  }
+
+  /* Botón outline */
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.9rem 2.25rem;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: #e8e0cf;
+    background: transparent;
+    border: 1px solid rgba(201,169,97,0.30);
+    border-radius: 999px;
+    transition: all 0.35s ease;
+  }
+  .btn-outline:hover {
+    color: #c9a961;
+    border-color: rgba(201,169,97,0.7);
+    background: rgba(201,169,97,0.04);
+  }
+
+  /* Línea decorativa con punto dorado en el medio */
+  .divider-gold {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .divider-gold::before,
+  .divider-gold::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(201,169,97,0.45), transparent);
+  }
+
+  /* Eyebrow / ojal de sección */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "Inter Tight", sans-serif;
+    font-size: 0.625rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.4em;
+    color: #c9a961;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: #c9a961;
+  }
+
+  /* Card de producto — efecto de elevación */
+  .product-card {
+    transition: transform 0.6s cubic-bezier(0.16,1,0.3,1),
+                box-shadow 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .product-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6),
+                0 0 0 1px rgba(201,169,97,0.25);
+  }
+
+  /* Etiqueta de nota olfativa */
+  .note-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.65rem;
+    font-size: 0.6rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: #d9bb6a;
+    background: rgba(201,169,97,0.06);
+    border: 1px solid rgba(201,169,97,0.18);
+    border-radius: 999px;
+  }
 }
 
-.font-headline {
-  font-family: 'Noto Serif', serif;
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar           { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track     { background: #070707; }
+  ::-webkit-scrollbar-thumb     { background: #3a3a3a; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #c9a961; }
 }
 
-.glass-card {
-  background: rgba(38, 38, 38, 0.6);
-  backdrop-filter: blur(20px);
-}
-
-.luminous-shadow {
-  box-shadow: 0px 20px 40px rgba(211, 148, 255, 0.08);
-}
-
-.gradient-primary {
-  background: linear-gradient(135deg, #d394ff, #aa30fa);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0e0e0e; }
-::-webkit-scrollbar-thumb { background: #484847; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #d394ff; }
-
-/* Material Icons */
+/* Material Icons (ligero, solo lo necesario) */
 .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
+  font-family: "Material Symbols Outlined";
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
