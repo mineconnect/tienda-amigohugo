@@ -8,6 +8,7 @@ import AddToCartButton from "./AddToCartButton";
 import { getSettings } from "@/lib/settings";
 import { createPublicClient } from "@/lib/publicSupabase";
 import type { Product, Category } from "@/lib/supabase";
+import { formatSize } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
 
@@ -138,10 +139,19 @@ export default async function ProductPage({
                 {product.size && (
                   <div className="px-4 py-2 bg-ink-900/50 border border-gold-400/15 rounded-full">
                     <span className="text-[10px] uppercase tracking-widest text-muted">
-                      Talle
+                      {(() => {
+                        const u = (product.size_unit || "").toLowerCase();
+                        if (u === "talle") return "Talle";
+                        if (u === "tamaño") return "Tamaño";
+                        if (u === "ml" || u === "l") return "Volumen";
+                        if (u === "g" || u === "kg") return "Peso";
+                        if (u === "cm") return "Medida";
+                        if (u === "u") return "Cantidad";
+                        return "Medida";
+                      })()}
                     </span>
                     <span className="ml-2 text-sm text-bone">
-                      {product.size}
+                      {formatSize(product.size, product.size_unit).replace(/^(Talle|Tamaño)\s/, "")}
                     </span>
                   </div>
                 )}

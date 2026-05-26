@@ -11,6 +11,7 @@ import {
   updateQuantity,
   cartTotal,
   buildWhatsAppMessage,
+  formatItemSize,
 } from "@/lib/cart";
 
 export default function CartPage() {
@@ -119,7 +120,7 @@ export default function CartPage() {
                         </h3>
                         {item.size && (
                           <p className="text-[10px] uppercase tracking-widest text-muted mt-1">
-                            Talle · {item.size}
+                            {formatItemSize(item)}
                           </p>
                         )}
                       </div>

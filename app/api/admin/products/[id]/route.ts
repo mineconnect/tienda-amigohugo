@@ -10,6 +10,7 @@ type ProductInput = Partial<{
   image_url: string | null;
   category_id: string | null;
   size: string | null;
+  size_unit: string | null;
   color: string | null;
   stock_qty: number | string;
   in_stock: boolean;
@@ -46,6 +47,12 @@ function sanitize(body: ProductInput) {
   }
   if (body.size !== undefined) {
     out.size = typeof body.size === "string" && body.size.trim() ? body.size.trim() : null;
+  }
+  if (body.size_unit !== undefined) {
+    out.size_unit =
+      typeof body.size_unit === "string" && body.size_unit.trim()
+        ? body.size_unit.trim()
+        : null;
   }
   if (body.color !== undefined) {
     out.color =

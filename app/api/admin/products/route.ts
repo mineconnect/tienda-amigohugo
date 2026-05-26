@@ -30,6 +30,7 @@ type ProductInput = {
   image_url?: string | null;
   category_id?: string | null;
   size?: string | null;
+  size_unit?: string | null;
   color?: string | null;
   stock_qty?: number | string;
   in_stock?: boolean;
@@ -54,6 +55,8 @@ function sanitize(body: ProductInput) {
     typeof body.category_id === "string" && body.category_id ? body.category_id : null;
   const size =
     typeof body.size === "string" && body.size.trim() ? body.size.trim() : null;
+  const size_unit =
+    typeof body.size_unit === "string" && body.size_unit.trim() ? body.size_unit.trim() : null;
   const color =
     typeof body.color === "string" && body.color.trim() ? body.color.trim() : null;
   const stockNum =
@@ -78,6 +81,7 @@ function sanitize(body: ProductInput) {
     image_url,
     category_id,
     size,
+    size_unit,
     color,
     stock_qty,
     in_stock,
