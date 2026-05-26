@@ -2,6 +2,8 @@
 import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import type { Product, Category } from "@/lib/supabase";
+import { compressImage } from "@/lib/imageCompress";
+import { formatSize } from "@/lib/supabase";
 
 type FormData = {
   name: string;
@@ -10,6 +12,7 @@ type FormData = {
   image_url: string;
   category_id: string;
   size: string;
+  size_unit: string;
   color: string;
   stock_qty: string;
   in_stock: boolean;
@@ -24,12 +27,25 @@ const emptyForm: FormData = {
   image_url: "",
   category_id: "",
   size: "",
+  size_unit: "",
   color: "",
   stock_qty: "0",
   in_stock: true,
   featured: false,
   sort_order: "0",
 };
+
+const SIZE_UNITS: { value: string; label: string; placeholder: string }[] = [
+  { value: "",       label: "Sin medida",       placeholder: "" },
+  { value: "talle",  label: "Talle",            placeholder: "S, M, L, 42..." },
+  { value: "tamaño", label: "Tamaño",           placeholder: "chico, mediano, grande" },
+  { value: "ml",     label: "Mililitros (ml)",  placeholder: "200" },
+  { value: "l",      label: "Litros (L)",       placeholder: "1.5" },
+  { value: "g",      label: "Gramos (g)",       placeholder: "500" },
+  { value: "kg",     label: "Kilogramos (kg)",  placeholder: "1" },
+  { value: "cm",     label: "Centímetros (cm)", placeholder: "30" },
+  { value: "u",      label: "Unidades (u)",     placeholder: "12" },
+];
 
 export default function ProductsTab() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -94,6 +110,7 @@ export default function ProductsTab() {
       image_url: p.image_url || "",
       category_id: p.category_id || "",
       size: p.size || "",
+      size_unit: p.size_unit || "",
       color: p.color || "",
       stock_qty: String(p.stock_qty ?? 0),
       in_stock: p.in_stock,
@@ -120,6 +137,7 @@ export default function ProductsTab() {
       image_url: form.image_url.trim() || null,
       category_id: form.category_id || null,
       size: form.size.trim() || null,
+      size_unit: form.size_unit || null,
       color: form.color.trim() || null,
       stock_qty: parseInt(form.stock_qty, 10) || 0,
       in_stock: form.in_stock,
@@ -295,7 +313,7 @@ export default function ProductsTab() {
                       ${product.price.toLocaleString("es-AR")}
                     </span>
                     {cat && <span>· {cat.name}</span>}
-                    {product.size && <span>· Talle {product.size}</span>}
+                    {product.size && <span>· {formatSize(product.size, product.size_unit)}</span>}
                     {product.color && <span>· {product.color}</span>}
                     {product.stock_qty > 0 && (
                       <span>· {product.stock_qty} u.</span>
@@ -416,25 +434,32 @@ export default function ProductsTab() {
                 </Field>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
-                <Field label="Talle / Tamaño">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <Field label="Tipo de medida">
+                  <select
+                    value={form.size_unit}
+                    onChange={(e) => setForm({ ...form, size_unit: e.target.value })}
+                    className="form-input"
+                  >
+                    {SIZE_UNITS.map((u) => (
+                      <option key={u.value} value={u.value}>{u.label}</option>
+                    ))}
+                  </select>
+                </Field>
+                <Field label={(() => {
+                  const u = SIZE_UNITS.find((x) => x.value === form.size_unit);
+                  return u && u.value ? u.label : "Medida";
+                })()}>
                   <input
                     type="text"
                     value={form.size}
                     onChange={(e) => setForm({ ...form, size: e.target.value })}
-                    className="form-input"
-                    placeholder="M, 42, 2 plazas..."
-                  />
-                </Field>
-                <Field label="Color">
-                  <input
-                    type="text"
-                    value={form.color}
-                    onChange={(e) =>
-                      setForm({ ...form, color: e.target.value })
-                    }
-                    className="form-input"
-                    placeholder="Negro"
+                    disabled={!form.size_unit}
+                    className="form-input disabled:opacity-50"
+                    placeholder={(() => {
+                      const u = SIZE_UNITS.find((x) => x.value === form.size_unit);
+                      return u?.placeholder || "Elegí un tipo arriba";
+                    })()}
                   />
                 </Field>
                 <Field label="Stock disponible">
@@ -449,6 +474,18 @@ export default function ProductsTab() {
                   />
                 </Field>
               </div>
+
+              <Field label="Color (opcional)">
+                <input
+                  type="text"
+                  value={form.color}
+                  onChange={(e) =>
+                    setForm({ ...form, color: e.target.value })
+                  }
+                  className="form-input"
+                  placeholder="Negro, rojo, multicolor..."
+                />
+              </Field>
 
               <Field label="URL o foto del producto">
                 <div className="flex gap-2 items-stretch">
@@ -470,19 +507,16 @@ export default function ProductsTab() {
                       type="file"
                       accept="image/*"
                       className="hidden"
-                      onChange={(e) => {
+                      onChange={async (e) => {
                         const file = e.target.files?.[0];
                         if (!file) return;
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                          if (ev.target?.result) {
-                            setForm({
-                              ...form,
-                              image_url: ev.target.result as string,
-                            });
-                          }
-                        };
-                        reader.readAsDataURL(file);
+                        try {
+                          const compressed = await compressImage(file, 1200, 0.85);
+                          setForm({ ...form, image_url: compressed });
+                        } catch (err) {
+                          setError("No se pudo procesar la imagen. Probá con otra.");
+                          console.error(err);
+                        }
                       }}
                     />
                   </label>

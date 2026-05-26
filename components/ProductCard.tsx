@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { Product } from "@/lib/supabase";
+import { Product, formatSize } from "@/lib/supabase";
 import { addToCart } from "@/lib/cart";
 import { useState } from "react";
 
@@ -22,6 +22,7 @@ export default function ProductCard({ product }: Props) {
       price: product.price,
       image_url: product.image_url,
       size: product.size,
+      size_unit: product.size_unit,
     });
     window.dispatchEvent(new Event("cart-updated"));
     setAdded(true);
@@ -103,7 +104,7 @@ export default function ProductCard({ product }: Props) {
         {(product.size || product.color) && (
           <div className="flex flex-wrap gap-1.5">
             {product.size && (
-              <span className="note-tag">Talle {product.size}</span>
+              <span className="note-tag">{formatSize(product.size, product.size_unit)}</span>
             )}
             {product.color && <span className="note-tag">{product.color}</span>}
           </div>

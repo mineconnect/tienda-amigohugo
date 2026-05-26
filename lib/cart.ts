@@ -4,8 +4,27 @@ export type CartItem = {
   price: number;
   image_url: string | null;
   size: string | null;
+  size_unit?: string | null;
   quantity: number;
 };
+
+/** Devuelve "Talle M", "200 ml", "Grande", etc. */
+export function formatItemSize(item: CartItem): string {
+  if (!item.size) return "";
+  const s = item.size.trim();
+  if (!s) return "";
+  switch ((item.size_unit || "").toLowerCase()) {
+    case "talle":  return `Talle ${s}`;
+    case "tamaño": return `Tamaño ${s.toLowerCase()}`;
+    case "ml":     return `${s} ml`;
+    case "l":      return `${s} L`;
+    case "g":      return `${s} g`;
+    case "kg":     return `${s} kg`;
+    case "cm":     return `${s} cm`;
+    case "u":      return `${s} u`;
+    default:       return s;
+  }
+}
 
 export const CART_KEY = "vhf_cart";
 export const WHATSAPP_PHONE = "5493834789035"; // +54 9 3834 78-9035
@@ -74,7 +93,8 @@ export function buildWhatsAppMessage(
 
   items.forEach((item) => {
     let line = `• ${item.name}`;
-    if (item.size) line += ` (${item.size})`;
+    const sizeLbl = formatItemSize(item);
+    if (sizeLbl) line += ` (${sizeLbl})`;
     line += ` — $${item.price.toLocaleString("es-AR")} x${item.quantity}`;
     lines.push(line);
   });

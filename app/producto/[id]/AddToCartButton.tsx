@@ -16,6 +16,7 @@ export default function AddToCartButton({ product }: { product: Product }) {
         price: product.price,
         image_url: product.image_url,
         size: product.size,
+        size_unit: product.size_unit,
       });
     }
     window.dispatchEvent(new Event("cart-updated"));
