@@ -24,23 +24,38 @@ async function getData(categoria?: string): Promise<{
     const categories = (catsRes.data as Category[]) || [];
     const selectedCategory = (catSelRes.data as Category | null) || null;
 
-    let query = sb
-      .from("products")
-      .select("*, category:categories(id, slug, name)")
-      .eq("in_stock", true);
+    // Home sin categoría: intentamos featured. Si no hay ninguno, mostramos todos in_stock
+    // (evita que la home aparezca vacía cuando el admin todavía no marcó nada como destacado).
+    const baseQuery = () =>
+      sb
+        .from("products")
+        .select("*, category:categories(id, slug, name)")
+        .eq("in_stock", true);
 
+    let products: Product[] = [];
     if (selectedCategory) {
-      query = query.eq("category_id", selectedCategory.id);
+      const { data } = await baseQuery()
+        .eq("category_id", selectedCategory.id)
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: false });
+      products = (data as Product[]) || [];
     } else {
-      query = query.eq("featured", true);
+      const { data: featured } = await baseQuery()
+        .eq("featured", true)
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: false });
+      products = (featured as Product[]) || [];
+      if (products.length === 0) {
+        const { data: all } = await baseQuery()
+          .order("sort_order", { ascending: true })
+          .order("created_at", { ascending: false })
+          .limit(20);
+        products = (all as Product[]) || [];
+      }
     }
 
-    const { data: products } = await query
-      .order("sort_order", { ascending: true })
-      .order("created_at", { ascending: false });
-
     return {
-      products: (products as Product[]) || [],
+      products,
       categories,
       selectedCategory,
     };
